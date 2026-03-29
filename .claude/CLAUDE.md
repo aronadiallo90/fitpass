@@ -1,6 +1,26 @@
-# CLAUDE.md — [NOM_PROJET]
-# Copier ce fichier dans .claude/ de chaque nouveau projet
-# Remplir les sections marquées ← À REMPLIR
+# CLAUDE.md — FitPass Dakar
+# Chargé automatiquement à chaque session — règles toujours actives
+
+## ⚠️ RÈGLES ABSOLUES — s'appliquent en permanence, même après /compact
+
+### Git — commit obligatoire après chaque feature
+Après toute feature ou fix terminé et testé (php artisan test = vert) :
+```bash
+git add <fichiers concernés>
+git commit -m "type(scope): description courte"
+```
+NE PAS attendre que l'utilisateur le demande. NE PAS grouper plusieurs features.
+
+### Stack réelle du projet (ne pas confondre avec les templates)
+- Laravel **13** (pas 11)
+- Tailwind CSS **v4** — utilise `@import 'tailwindcss'` + `@theme {}` dans app.css, PAS de tailwind.config.js
+- PHPUnit **12** — utilise `#[Test]` (attribut PHP 8), PAS `/** @test */`
+- `HasUuids` trait (Eloquent built-in) pour les UUIDs — PAS de `boot()` manuel
+- PHP via Herd : `/c/Users/Arona/.config/herd-lite/bin/php.exe`
+- Composer via Herd : `/c/Users/Arona/.config/herd-lite/bin/composer.bat`
+- Vite — lancer `npm run dev` ou `npm run build` avant de consulter les pages dans un navigateur
+
+---
 
 ## Chargement automatique
 @.claude/agents.md
@@ -18,7 +38,7 @@
 NOM=FitPass Dakar
 DESCRIPTION=Abonnement universel donnant accès à toutes les salles de sport partenaires à Dakar
 URL=fitpass.sn
-STACK=Laravel 11 + MySQL 8 + Redis + Blade + Tailwind CSS + Alpine.js
+STACK=Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
 
 ## Environnement
 OS=Windows PowerShell

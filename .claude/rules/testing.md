@@ -6,6 +6,19 @@ Tester le comportement, pas l'implémentation.
 Un test qui passe malgré un bug est pire que pas de test.
 php artisan test doit passer à 100% avant TOUT commit.
 
+## PHPUnit 12 — syntaxe obligatoire
+```php
+// ✅ PHPUnit 12 — attribut PHP 8
+use PHPUnit\Framework\Attributes\Test;
+
+#[Test]
+public function it_creates_a_subscription(): void { ... }
+
+// ❌ PHPUnit < 12 — annotation supprimée dans PHPUnit 12
+/** @test */
+public function it_creates_a_subscription(): void { ... }
+```
+
 ## Structure
 
 ```
@@ -33,6 +46,7 @@ namespace Tests\Unit\Services;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use App\Services\OrderService;
 use App\Models\Order;
 use App\Models\Customer;
@@ -49,7 +63,7 @@ class OrderServiceTest extends TestCase
         $this->service = app(OrderService::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_an_order_with_correct_status(): void
     {
         // Arrange
@@ -65,7 +79,7 @@ class OrderServiceTest extends TestCase
         $this->assertDatabaseHas('orders', ['id' => $order->id]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_exception_when_cancelling_shipped_order(): void
     {
         // Arrange
@@ -93,6 +107,7 @@ namespace Tests\Feature\Api;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 
@@ -100,7 +115,7 @@ class OrderTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function authenticated_user_can_create_order(): void
     {
         // Arrange
@@ -116,14 +131,14 @@ class OrderTest extends TestCase
         $this->assertDatabaseHas('orders', ['status' => 'nouvelle']);
     }
 
-    /** @test */
+    #[Test]
     public function unauthenticated_user_cannot_create_order(): void
     {
         $response = $this->postJson('/api/v1/orders', []);
         $response->assertStatus(401);
     }
 
-    /** @test */
+    #[Test]
     public function order_creation_fails_with_invalid_data(): void
     {
         Sanctum::actingAs(User::factory()->create());
@@ -132,7 +147,7 @@ class OrderTest extends TestCase
                  ->assertJsonValidationErrors(['total']);
     }
 
-    /** @test */
+    #[Test]
     public function non_admin_cannot_access_admin_endpoint(): void
     {
         Sanctum::actingAs(User::factory()->create(['role' => 'user']));

@@ -2,7 +2,13 @@
 # Fichier réutilisable — ne pas modifier entre projets
 
 ## Stack de référence
-Laravel 11 + MySQL 8 + Redis + Blade + Tailwind CSS + Alpine.js
+Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
+
+## Tailwind CSS v4 — différences importantes
+- PAS de `tailwind.config.js` — remplacé par `@theme {}` dans `resources/css/app.css`
+- Import : `@import 'tailwindcss'` en haut du CSS (pas de directives `@tailwind`)
+- Variables custom dans `@theme { --color-primary: #FF3B3B; ... }`
+- Composants réutilisables dans `@layer components { .btn-primary { ... } }`
 
 ## Architecture imposée
 
@@ -90,14 +96,21 @@ protected $casts = [
     'created_at' => 'datetime',
 ];
 
-// UUID pour clés exposées en API
-public $incrementing = false;
-protected $keyType = 'string';
+// UUID pour clés primaires — utiliser HasUuids (built-in Laravel)
+// ✅ Correct
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
+class Subscription extends Model
+{
+    use HasFactory, HasUuids;
+    // HasUuids gère automatiquement : $incrementing=false, $keyType='string', uuid à la création
+}
+
+// ❌ Ne plus faire — pattern obsolète remplacé par HasUuids
 protected static function boot(): void
 {
     parent::boot();
-    static::creating(fn($model) => $model->id = Str::uuid());
+    static::creating(fn($model) => $model->id = (string) Str::uuid());
 }
 ```
 

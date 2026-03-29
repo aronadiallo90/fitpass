@@ -42,13 +42,17 @@ docs(readme): ajouter instructions installation
 Après chaque feature ou fix terminé et testé :
 
 ```bash
-git add .
+git add <fichiers concernés>   # préférer les fichiers nommés à git add .
 git commit -m "type(scope): description courte"
 git push origin develop
 ```
 
-**Ne jamais attendre qu'on demande le commit.**
-Si php artisan test échoue → corriger d'abord, commiter ensuite.
+**Règles impératives — aucune exception :**
+- Ne jamais attendre que l'utilisateur demande le commit
+- S'applique même après un /compact ou au début d'une nouvelle session
+- Ne jamais grouper plusieurs features dans un seul commit
+- Si php artisan test échoue → corriger d'abord, commiter ensuite
+- Si la branche develop n'existe pas encore, commiter sur main
 
 ## Ce qu'on ne commit JAMAIS
 
