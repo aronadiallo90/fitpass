@@ -56,6 +56,9 @@ Route::middleware(['auth', 'role:admin,super_admin'])
     ->prefix('two-factor')
     ->name('two-factor.')
     ->group(function () {
-        Route::get('/setup', fn() => view('auth.two-factor-setup'))->name('setup');
+        Route::get('/setup', [\App\Http\Controllers\Web\Auth\TwoFactorController::class, 'setup'])->name('setup');
+        Route::post('/confirm', [\App\Http\Controllers\Web\Auth\TwoFactorController::class, 'confirm'])->name('confirm');
         Route::get('/challenge', fn() => view('auth.two-factor-challenge'))->name('challenge');
+        Route::post('/verify', [\App\Http\Controllers\Web\Auth\TwoFactorController::class, 'verify'])->name('verify');
+        Route::post('/recovery', [\App\Http\Controllers\Web\Auth\TwoFactorController::class, 'recovery'])->name('recovery');
     });
