@@ -1,0 +1,83 @@
+name: Deploy — Production VPS
+
+# Déclenché uniquement sur push vers main (après merge de PR validée par CI)
+on:
+  push:
+    branches: [main]
+
+# ── Prérequis : secrets à configurer dans GitHub → Settings → Secrets ──────
+# VPS_HOST      : IP ou domaine du VPS DigitalOcean
+# VPS_USER      : utilisateur SSH (ex: fitpass ou deploy)
+# VPS_SSH_KEY   : clé privée SSH (cat ~/.ssh/id_rsa | pbcopy)
+# VPS_PORT      : port SSH (défaut: 22)
+# VPS_APP_PATH  : chemin absolu de l'app sur le VPS (ex: /var/www/fitpass)
+# ───────────────────────────────────────────────────────────────────────────
+
+jobs:
+  deploy:
+    name: Deploy to DigitalOcean VPS
+    runs-on: ubuntu-latest
+    needs: []   # Pas de dépendance directe — CI est sur le même commit via branch protection
+
+    # Désactiver ce job jusqu'à ce que les secrets soient configurés
+    if: |
+      vars.DEPLOY_ENABLED == 'true'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+
+            echo "=== [FitPass Deploy] Début $(date) ==="
+
+            cd ${{ secrets.VPS_APP_PATH }}
+
+            # 1. Maintenance mode
+            php artisan down --retry=10
+
+            # 2. Fetch + pull
+            git fetch origin main
+            git reset --hard origin/main
+
+            # 3. Dépendances PHP (prod, sans dev)
+            composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
+
+            # 4. Dépendances JS + build assets
+            npm ci --omit=dev
+            npm run build
+
+            # 5. Migrations (force en prod)
+            php artisan migrate --force
+
+            # 6. Optimisations Laravel
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan event:cache
+
+            # 7. Permissions storage
+            chmod -R 775 storage bootstrap/cache
+            chown -R www-data:www-data storage bootstrap/cache
+
+            # 8. Redémarrer queues Redis
+            php artisan queue:restart
+
+            # 9. Désactiver maintenance
+            php artisan up
+
+            echo "=== [FitPass Deploy] Terminé $(date) ==="
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Deploy échoué — vérifier les logs SSH"
+          # Ajouter ici une notif Slack/WhatsApp si disponible

@@ -14,12 +14,22 @@ class PayTechController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        // Validation HMAC — active uniquement si PAYTECH_SECRET est configuré (production)
+        $secret = config('services.paytech.secret');
+
+        if ($secret && ! $this->isValidHmac($request, $secret)) {
+            Log::warning('[PayTech Webhook] Signature HMAC invalide', [
+                'ip' => $request->ip(),
+            ]);
+            return response()->json(['message' => 'Unauthorized.'], 401);
+        }
+
         $payload = $request->all();
 
-        Log::info('[PayTech Webhook] Reçu', ['payload' => $payload]);
-
-        // Note : la validation HMAC sera activée quand on branchera le vrai PayTech
-        // Pour l'instant, le FakePaymentService traite directement le payload
+        Log::info('[PayTech Webhook] Reçu', [
+            'ref_command'   => $payload['ref_command'] ?? null,
+            'response_text' => $payload['response_text'] ?? null,
+        ]);
 
         $processed = $this->paymentService->processWebhook($payload);
 
@@ -28,5 +38,13 @@ class PayTechController extends Controller
         }
 
         return response()->json(['message' => 'Webhook traité.'], 200);
+    }
+
+    private function isValidHmac(Request $request, string $secret): bool
+    {
+        $signature = $request->header('X-PayTech-Signature', '');
+        $expected  = hash_hmac('sha256', $request->getContent(), $secret);
+
+        return hash_equals($expected, $signature);
     }
 }
