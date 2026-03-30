@@ -35,17 +35,44 @@ Dernière mise à jour : 2026-03-30 (Sprint 4 démarré)
 - Alpine.js ajouté au layout gym
 - 50 nouveaux Feature tests Web — 102 tests total, 100% passants
 
-## Sprint 4 — À faire
+## Sprint 4 — ✅ Terminé (commit `041bc9a`, 118 tests)
+
+## Sprint 5 — ✅ Terminé (commit `99d2030`, 118 tests)
 
 ### Tâches
 
 | ID | Tâche | Agent | Statut |
 |----|-------|-------|--------|
-| S4-T1 | Landing page fitpass.sn (hero, plans, carte, témoignages, CTA) | DESIGNER+DEV | ⏳ |
-| S4-T2 | SEO : meta tags, OG, sitemap.xml, robots.txt | DEV | ⏳ |
-| S4-T3 | Plan de lancement Instagram + TikTok + WhatsApp | MARKETING | ⏳ |
-| S4-T4 | Séquence SMS onboarding (bienvenue + rappels) | MARKETING+DEV | ⏳ |
-| S4-T5 | Audit SEO + content gaps | MARKETING | ⏳ |
+| S5-T1 | Audit sécurité OWASP | SECURITY | ✅ |
+| S5-T2 | composer audit + npm audit → 0 vulnérabilité | SECURITY | ✅ |
+| S5-T3 | GitHub Actions CI/CD | CICD | ✅ |
+| S5-T4 | Config prod + guide VPS | CICD | ✅ |
+| S5-T5 | Recette finale | QA | ⏳ En attente VPS |
+| S5-T6 | Rapport client stakeholder | PM | ✅ (`docs/rapport-sprint5-cloture.md`) |
+
+## 🎉 PROJET LIVRÉ — En attente déploiement VPS
+
+### Actions restantes (côté client — Mamadou)
+| Action | Priorité |
+|--------|---------|
+| Commander Droplet DigitalOcean (Ubuntu 24, 2vCPU/4GB, ~$24/mois) | 🔴 Critique |
+| Enregistrer fitpass.sn | 🔴 Critique |
+| Créer compte Twilio + renseigner credentials | 🔴 Critique |
+| Contacter PayTech Sénégal pour clés API | 🔴 Critique |
+| Créer Google Business Profile FitPass Dakar | 🟡 Important |
+| Signer 10 salles partenaires minimum | 🟡 Important |
+
+## Sprint 4 — À faire (archivé)
+
+### Tâches
+
+| ID | Tâche | Agent | Statut |
+|----|-------|-------|--------|
+| S4-T1 | Landing page fitpass.sn (hero, plans, carte, témoignages, CTA) | DESIGNER+DEV | ✅ |
+| S4-T2 | SEO : meta tags, OG, sitemap.xml, robots.txt | DEV | ✅ |
+| S4-T3 | Plan de lancement Instagram + TikTok + WhatsApp | MARKETING | ✅ |
+| S4-T4 | Séquence SMS onboarding (bienvenue + rappels) | MARKETING+DEV | ✅ |
+| S4-T5 | Audit SEO + content gaps | MARKETING | ✅ |
 
 ## Bloquants actuels
 
