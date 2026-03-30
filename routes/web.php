@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\Auth\RegisterController;
 use App\Http\Controllers\Web\Auth\TwoFactorController;
 use App\Http\Controllers\Web\Gym\GymCheckinController;
 use App\Http\Controllers\Web\Gym\GymDashboardController;
+use App\Http\Controllers\Web\Gym\GymScanController;
 use App\Http\Controllers\Web\Member\CheckinWebController;
 use App\Http\Controllers\Web\Member\DashboardController;
 use App\Http\Controllers\Web\Member\MapController;
@@ -51,8 +52,9 @@ Route::middleware(['auth', 'role:gym_owner'])
     ->prefix('gym')
     ->name('gym.')
     ->group(function () {
-        Route::get('/',       GymDashboardController::class)->name('dashboard');
-        Route::get('/scan',   fn() => view('gym.scan'))->name('scan');
+        Route::get('/',         GymDashboardController::class)->name('dashboard');
+        Route::get('/scan',     fn() => view('gym.scan'))->name('scan');
+        Route::post('/scan/validate', [GymScanController::class, 'validate'])->name('scan.validate');
         Route::get('/checkins', GymCheckinController::class)->name('checkins');
     });
 

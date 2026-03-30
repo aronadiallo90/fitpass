@@ -37,6 +37,24 @@
             Placez le QR code dans le cadre
         </p>
         <div x-show="error" class="alert-error" style="margin-top: 1rem;" x-text="error"></div>
+
+        @if(app()->isLocal())
+        {{-- Saisie manuelle du token QR — DEV uniquement --}}
+        <div style="margin-top: 2rem; padding: 1rem; border: 1px dashed var(--color-warning); border-radius: 0.5rem;">
+            <p style="font-size: 0.7rem; color: var(--color-warning); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
+                ⚠ Mode DEV — Saisie manuelle
+            </p>
+            <input type="text"
+                   x-model="manualToken"
+                   placeholder="Coller le qr_token du membre..."
+                   style="width: 100%; background: var(--color-bg-soft); border: 1px solid var(--color-border); color: var(--color-text); padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; margin-bottom: 0.5rem; font-family: monospace;">
+            <button @click="manualToken && validate(manualToken)"
+                    class="btn-primary"
+                    style="width: 100%; padding: 0.5rem;">
+                Valider manuellement
+            </button>
+        </div>
+        @endif
     </div>
 
     {{-- Résultat valide --}}
@@ -88,6 +106,7 @@ function qrScanner() {
         videoEl: null,
         canvasEl: null,
         animFrameId: null,
+        manualToken: '',
 
         async init() {
             this.videoEl = document.getElementById('qr-video');
@@ -124,11 +143,10 @@ function qrScanner() {
 
         async validate(qrToken) {
             try {
-                const res = await fetch('/api/v1/checkins/validate', {
+                const res = await fetch('{{ route("gym.scan.validate") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer {{ auth()->user()->gym?->api_token ?? "" }}',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                     },
                     body: JSON.stringify({ qr_token: qrToken }),
