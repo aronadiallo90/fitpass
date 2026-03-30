@@ -251,7 +251,6 @@
         color: var(--color-text-muted);
         margin-top: 0.25rem;
     }
-}
 
     /* ── Sprint 3 : QR Code ──────────────────────────── */
     .qr-wrapper {
@@ -457,7 +456,6 @@
     }
     .kpi-trend-up   { color: var(--color-success); }
     .kpi-trend-down { color: var(--color-danger); }
-
 }
 
 /* ─── Utilitaires ───────────────────────────────────── */
