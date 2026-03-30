@@ -112,8 +112,8 @@
                 <td><span class="badge badge-{{ $sub->status }}">{{ ucfirst($sub->status) }}</span></td>
                 @if(app()->isLocal())
                 <td>
-                    @if($sub->status === 'pending' && $sub->payments()->where('status', 'pending')->exists())
-                        @php $payment = $sub->payments()->where('status', 'pending')->latest()->first(); @endphp
+                    @if($sub->status === 'pending' && $sub->payment?->status === 'pending')
+                        @php $payment = $sub->payment; @endphp
                         <form method="POST" action="{{ route('dev.pay.confirm', $payment) }}" style="display:inline;">
                             @csrf
                             <button type="submit" style="font-size:0.7rem; padding:0.2rem 0.6rem; background:var(--color-success); color:white; border:none; border-radius:4px; cursor:pointer;">✓ Valider</button>

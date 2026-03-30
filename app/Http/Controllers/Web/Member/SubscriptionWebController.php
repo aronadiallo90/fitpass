@@ -24,7 +24,7 @@ class SubscriptionWebController extends Controller
 
         $activeSubscription = $user->activeSubscription()->with('plan')->first();
         $plans              = SubscriptionPlan::active()->get();
-        $subscriptions      = $user->subscriptions()->with('plan')->latest()->paginate(10);
+        $subscriptions      = $user->subscriptions()->with(['plan', 'payment'])->latest()->paginate(10);
 
         return view('member.subscriptions', compact('activeSubscription', 'plans', 'subscriptions'));
     }
