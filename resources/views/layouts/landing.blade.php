@@ -14,6 +14,7 @@
     <meta property="og:url"         content="{{ url('/') }}">
     <meta property="og:image"       content="{{ url('/og-image.jpg') }}">
     <meta property="og:locale"      content="fr_SN">
+    <link rel="canonical" href="{{ url('/') }}">
 
     {{-- Twitter Card --}}
     <meta name="twitter:card"        content="summary_large_image">
