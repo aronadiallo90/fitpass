@@ -25,8 +25,8 @@ class GymProfileResource extends JsonResource
             'is_active'      => $this->is_active,
 
             // Activités normalisées (many-to-many)
-            'activities' => $this->whenLoaded('activities', fn() =>
-                $this->activities->map(fn($a) => [
+            'activities' => $this->whenLoaded('gymActivities', fn($loaded) =>
+                $loaded->map(fn($a) => [
                     'id'   => $a->id,
                     'name' => $a->name,
                     'slug' => $a->slug,

@@ -66,7 +66,8 @@ class Gym extends Model
         return $this->hasMany(GymCheckin::class);
     }
 
-    public function activities(): BelongsToMany
+    // Renommé gymActivities() pour éviter le conflit avec le cast 'activities' (JSON legacy)
+    public function gymActivities(): BelongsToMany
     {
         return $this->belongsToMany(GymActivity::class, 'gym_activity');
     }

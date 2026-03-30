@@ -39,7 +39,7 @@ class GymSearchService implements GymSearchServiceInterface
 
     private function buildQuery(array $filters, ?float $lat, ?float $lng)
     {
-        $query = Gym::active()->with(['activities', 'photos' => fn($q) => $q->where('is_cover', true)]);
+        $query = Gym::active()->with(['gymActivities', 'photos' => fn($q) => $q->where('is_cover', true)]);
 
         // Filtre par nom
         if (! empty($filters['q'])) {
@@ -53,7 +53,7 @@ class GymSearchService implements GymSearchServiceInterface
 
         // Filtre par activité (many-to-many via gym_activities)
         if (! empty($filters['activity'])) {
-            $query->whereHas('activities', fn($q) => $q->where('slug', $filters['activity']));
+            $query->whereHas('gymActivities', fn($q) => $q->where('slug', $filters['activity']));
         }
 
         // Tri par distance (Haversine) — uniquement si lat/lng fournis ET driver MySQL

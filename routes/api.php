@@ -14,7 +14,10 @@ Route::prefix('v1')->name('api.')->group(function () {
         ->name('auth.register');
 
     Route::get('gyms', [\App\Http\Controllers\Api\GymController::class, 'index'])->name('gyms.index');
+    Route::get('gyms/search', \App\Http\Controllers\Api\GymSearchController::class)->name('gyms.search');
     Route::get('gyms/geojson', [\App\Http\Controllers\Api\GymController::class, 'geojson'])->name('gyms.geojson');
+    Route::get('gyms/{slug}/profile', [\App\Http\Controllers\Api\GymController::class, 'profile'])->name('gyms.profile');
+    Route::get('gyms/{slug}/programs', [\App\Http\Controllers\Api\GymController::class, 'programs'])->name('gyms.programs');
     Route::get('gyms/{gym}', [\App\Http\Controllers\Api\GymController::class, 'show'])->name('gyms.show');
 
     // Validation QR code (bornes autonomes — token statique par salle)

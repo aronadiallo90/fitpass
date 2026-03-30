@@ -71,8 +71,8 @@ class GymSearchServiceTest extends TestCase
         $gymYoga  = Gym::factory()->create(['owner_id' => $this->owner->id, 'name' => 'Yoga Center', 'is_active' => true]);
         $gymMuscu = Gym::factory()->create(['owner_id' => $this->owner->id, 'name' => 'Iron Gym',    'is_active' => true]);
 
-        $gymYoga->activities()->attach($yoga->id);
-        $gymMuscu->activities()->attach($muscu->id);
+        $gymYoga->gymActivities()->attach($yoga->id);
+        $gymMuscu->gymActivities()->attach($muscu->id);
 
         $results = $this->service->search(['activity' => 'yoga']);
 
