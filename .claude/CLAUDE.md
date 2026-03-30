@@ -1,6 +1,29 @@
 # CLAUDE.md — FitPass Dakar
 # Chargé automatiquement à chaque session — règles toujours actives
 
+---
+
+## 🧠 DÉBUT DE SESSION — LIRE DANS CET ORDRE EXACT
+
+**À chaque nouvelle conversation, Claude lit ces fichiers avant toute action :**
+
+```
+1. memory/sprint-state.md     → Quel sprint ? Quoi de fait ? Quoi reste-t-il ?
+2. memory/preferences.md      → Comment travailler ? Comportements interdits ?
+3. memory/decisions.md        → Décisions techniques figées — ne pas contredire
+4. memory/technical.md        → Pièges connus — ne pas reproduire les erreurs
+5. .claude/agents.md          → Workflow des agents, chainage, HANDOFF
+6. BACKLOG.md                 → Tâches du sprint courant
+7. ROADMAP.md                 → Timeline globale, sprints terminés, décisions ouvertes
+```
+
+**Après avoir lu ces 6 fichiers, résumer en 3 lignes :**
+- Sprint courant + ce qui reste
+- Dernier agent actif + prochaine tâche
+- Bloquants éventuels
+
+---
+
 ## ⚠️ RÈGLES ABSOLUES — s'appliquent en permanence, même après /compact
 
 ### Chainage agents — OBLIGATOIRE, aucune exception
@@ -49,6 +72,11 @@ NE PAS attendre que l'utilisateur le demande. NE PAS grouper plusieurs features.
 ---
 
 ## Chargement automatique
+@memory/sprint-state.md
+@memory/preferences.md
+@memory/decisions.md
+@memory/technical.md
+@ROADMAP.md
 @.claude/agents.md
 @.claude/rules/business.md
 @.claude/rules/design.md

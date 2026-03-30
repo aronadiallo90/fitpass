@@ -1,7 +1,17 @@
 # BACKLOG — FitPass Dakar
-Généré le : 2026-03-29
-Sprint actuel : 0 (Kick-off)
-Stack : Laravel 11 + MySQL 8 + Redis + Blade + Tailwind CSS + Alpine.js
+Généré le : 2026-03-29 | Mis à jour : 2026-03-30
+Sprint actuel : 3 — Interfaces
+Stack : Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
+
+## État des sprints
+| Sprint | Statut | Commit |
+|--------|--------|--------|
+| Sprint 0 — Kick-off | ✅ Terminé | — |
+| Sprint 1 — Fondations | ✅ Terminé | `9c1e45d` |
+| Sprint 2 — Core Métier | ✅ Terminé | `df78bb2` (52 tests) |
+| Sprint 3 — Interfaces | 🔄 En cours | — |
+| Sprint 4 — Marketing | ⏳ À venir | — |
+| Sprint 5 — Livraison | ⏳ À venir | — |
 
 ---
 
@@ -26,33 +36,33 @@ n'ont pas d'infrastructure digitale. FitPass arrive en pionnier.
 
 | ID | User Story | Agent | Estim. | Dépend de |
 |----|-----------|-------|--------|-----------|
-| S1-T1 | Créer le projet Laravel 11 + config `.env` + Git init | DEV | S | — |
-| S1-T2 | Migrations DB : users, subscription_plans, subscriptions, payments, gyms, gym_checkins, sms_logs | DEV | M | S1-T1 |
-| S1-T3 | Models Eloquent + relations + casts (prix integer FCFA) | DEV | M | S1-T2 |
-| S1-T4 | Factories + Seeders (plans tarifaires, salles test, users) | DEV | M | S1-T3 |
-| S1-T5 | Auth multi-rôles : register/login/logout (Sanctum API + sessions Web) | DEV | L | S1-T3 |
-| S1-T6 | Middleware rôles : `role:member`, `role:gym_owner`, `role:admin` | SECURITY | S | S1-T5 |
-| S1-T7 | Rate limiting : api (60/min), auth (10/min), admin (30/min) | SECURITY | S | S1-T5 |
-| S1-T8 | 2FA obligatoire pour admin + super_admin | SECURITY | M | S1-T5 |
+| S1-T1 | ~~Créer le projet Laravel 11 + config `.env` + Git init~~ | DEV | S | — | ✅ |
+| S1-T2 | ~~Migrations DB : users, subscription_plans, subscriptions, payments, gyms, gym_checkins, sms_logs~~ | DEV | M | S1-T1 | ✅ |
+| S1-T3 | ~~Models Eloquent + relations + casts (prix integer FCFA)~~ | DEV | M | S1-T2 | ✅ |
+| S1-T4 | ~~Factories + Seeders (plans tarifaires, salles test, users)~~ | DEV | M | S1-T3 | ✅ |
+| S1-T5 | ~~Auth multi-rôles : register/login/logout (Sanctum API + sessions Web)~~ | DEV | L | S1-T3 | ✅ |
+| S1-T6 | ~~Middleware rôles : `role:member`, `role:gym_owner`, `role:admin`~~ | SECURITY | S | S1-T5 | ✅ |
+| S1-T7 | ~~Rate limiting : api (60/min), auth (10/min), admin (30/min)~~ | SECURITY | S | S1-T5 | ✅ |
+| S1-T8 | ~~2FA obligatoire pour admin + super_admin~~ | SECURITY | M | S1-T5 | ✅ |
 
 ### Tâches parallèles (peuvent se faire en même temps)
 
-| ID | User Story | Agent | Estim. |
-|----|-----------|-------|--------|
-| S1-P1 | Config Tailwind : couleurs FitPass (rouge #FF3B3B, fond #0A0A0F) + Google Fonts | DESIGNER | S |
-| S1-P2 | Layout Blade : `app.blade.php` (member), `admin.blade.php`, `gym.blade.php` | DESIGNER | M |
-| S1-P3 | Composants Blade : bouton primaire, card, badge statut, input formulaire | DESIGNER | M |
-| S1-P4 | Headers sécurité HTTP (Middleware SecurityHeaders) | SECURITY | S |
-| S1-P5 | Config `.gitignore` + `.env.example` + README install | DEV | S |
+| ID | User Story | Agent | Estim. | Statut |
+|----|-----------|-------|--------|--------|
+| S1-P1 | ~~Config Tailwind : couleurs FitPass (rouge #FF3B3B, fond #0A0A0F) + Google Fonts~~ | DESIGNER | S | ✅ |
+| S1-P2 | ~~Layout Blade : `app.blade.php` (member), `admin.blade.php`, `gym.blade.php`~~ | DESIGNER | M | ✅ |
+| S1-P3 | ~~Composants Blade : bouton primaire, card, badge statut, input formulaire~~ | DESIGNER | M | ✅ |
+| S1-P4 | ~~Headers sécurité HTTP (Middleware SecurityHeaders)~~ | SECURITY | S | ✅ |
+| S1-P5 | ~~Config `.gitignore` + `.env.example` + README install~~ | DEV | S | ✅ |
 
 ### Definition of Done Sprint 1
-- [ ] `php artisan test` → 0 erreur
-- [ ] Migrations rollback/re-run sans erreur
-- [ ] Auth : register, login, logout fonctionnels en Feature test
-- [ ] Rôles : 401 sans token, 403 mauvais rôle (tests écrits)
-- [ ] 2FA admin opérationnel
-- [ ] Design system Tailwind appliqué (pas de couleurs Tailwind génériques)
-- [ ] `git commit` avec message conventionnel
+- [x] `php artisan test` → 0 erreur
+- [x] Migrations rollback/re-run sans erreur
+- [x] Auth : register, login, logout fonctionnels en Feature test
+- [x] Rôles : 401 sans token, 403 mauvais rôle (tests écrits)
+- [x] 2FA admin opérationnel
+- [x] Design system Tailwind appliqué (pas de couleurs Tailwind génériques)
+- [x] `git commit` avec message conventionnel (`9c1e45d`)
 
 ---
 
@@ -62,34 +72,59 @@ n'ont pas d'infrastructure digitale. FitPass arrive en pionnier.
 
 | ID | User Story | Agent | Estim. | Dépend de |
 |----|-----------|-------|--------|-----------|
-| S2-T1 | `SubscriptionPlanRepository` + `SubscriptionPlanService` | DEV | S | S1-T3 |
-| S2-T2 | `SubscriptionService` : create, renew, expire, cancel | DEV | L | S2-T1 |
-| S2-T3 | `PaymentService` : initiate (PayTech), process webhook, validate HMAC | DEV | L | S2-T2 |
-| S2-T4 | Webhook PayTech : POST `/api/v1/webhooks/paytech` + job Redis async | DEV | M | S2-T3 |
-| S2-T5 | `CheckinService` : validate (QR + abonnement + anti-doublon) | DEV | L | S2-T2 |
-| S2-T6 | API endpoints abonnements + paiements + checkins (Resources + Form Requests) | DEV | L | S2-T3, S2-T5 |
-| S2-T7 | `SmsService` (Twilio) : send, queue async, log dans `sms_logs` | DEV | M | S1-T3 |
-| S2-T8 | Cron jobs : expirer abonnements + rappels SMS J-7/J-1 | DEV | M | S2-T7 |
+| S2-T1 | ~~`SubscriptionPlanRepository` + `SubscriptionPlanService`~~ | DEV | S | S1-T3 | ✅ |
+| S2-T2 | ~~`SubscriptionService` : create, renew, expire, cancel~~ | DEV | L | S2-T1 | ✅ |
+| S2-T3 | ~~`PaymentService` : initiate (PayTech), process webhook, validate HMAC~~ | DEV | L | S2-T2 | ✅ (FakePaymentService — sandbox PayTech requis) |
+| S2-T4 | ~~Webhook PayTech : POST `/api/v1/webhooks/paytech` + job Redis async~~ | DEV | M | S2-T3 | ✅ |
+| S2-T5 | ~~`CheckinService` : validate (QR + abonnement + anti-doublon)~~ | DEV | L | S2-T2 | ✅ |
+| S2-T6 | ~~API endpoints abonnements + paiements + checkins (Resources + Form Requests)~~ | DEV | L | S2-T3, S2-T5 | ✅ |
+| S2-T7 | ~~`SmsService` (Twilio) : send, queue async, log dans `sms_logs`~~ | DEV | M | S1-T3 | ✅ (FakeSmsService — credentials Twilio requis) |
+| S2-T8 | ~~Cron jobs : expirer abonnements + rappels SMS J-7/J-1~~ | DEV | M | S2-T7 | ✅ |
 
 ### Tâches parallèles
 
-| ID | User Story | Agent | Estim. |
-|----|-----------|-------|--------|
-| S2-P1 | Unit tests : SubscriptionService (happy path, erreurs, transitions statuts) | QA | M |
-| S2-P2 | Unit tests : CheckinService (valide, expiré, doublon, plan découverte) | QA | M |
-| S2-P3 | Feature tests API : abonnements (201, 401, 403, 422) | QA | M |
-| S2-P4 | Feature tests API : webhook PayTech (HMAC valide/invalide, idempotence) | QA | M |
-| S2-P5 | Interfaces Blade : page plans, récapitulatif paiement, retour PayTech | DESIGNER | M |
+| ID | User Story | Agent | Estim. | Statut |
+|----|-----------|-------|--------|--------|
+| S2-P1 | ~~Unit tests : SubscriptionService (happy path, erreurs, transitions statuts)~~ | QA | M | ✅ |
+| S2-P2 | ~~Unit tests : CheckinService (valide, expiré, doublon, plan découverte)~~ | QA | M | ✅ |
+| S2-P3 | ~~Feature tests API : abonnements (201, 401, 403, 422)~~ | QA | M | ✅ |
+| S2-P4 | ~~Feature tests API : webhook PayTech (HMAC valide/invalide, idempotence)~~ | QA | M | ✅ |
+| S2-P5 | Interfaces Blade : page plans, récapitulatif paiement, retour PayTech | DESIGNER | M | ⏳ (Sprint 3) |
 
 ### Definition of Done Sprint 2
-- [ ] `php artisan test` → 0 erreur
-- [ ] Souscription end-to-end testée en sandbox PayTech
-- [ ] Webhook PayTech : HMAC validé, idempotence OK, activation abonnement OK
-- [ ] SMS Twilio envoyé à l'activation (testé en sandbox)
-- [ ] Checkin : valide / expiré / doublon gérés correctement
-- [ ] Plan Découverte : décompte séances fonctionnel
-- [ ] Cron expiration abonnements testé manuellement
-- [ ] 0 requête N+1 (vérification Laravel Debugbar)
+- [x] `php artisan test` → 0 erreur (52 tests passants — commit `df78bb2`)
+- [ ] Souscription end-to-end testée en sandbox PayTech *(bloqué : clé API manquante)*
+- [x] Webhook PayTech : HMAC validé, idempotence OK, activation abonnement OK
+- [ ] SMS Twilio envoyé à l'activation *(bloqué : credentials Twilio manquants)*
+- [x] Checkin : valide / expiré / doublon gérés correctement
+- [x] Plan Découverte : décompte séances fonctionnel
+- [x] Cron expiration abonnements testé manuellement
+- [ ] 0 requête N+1 *(à vérifier avec Laravel Debugbar en Sprint 3)*
+
+---
+
+## Bilan DESIGNER Sprint 1-2 (audit 2026-03-30)
+
+### ✅ Livré correctement
+- `resources/css/app.css` — design system complet (variables, composants Tailwind v4)
+- `resources/views/layouts/` — app, admin, gym
+- `resources/views/auth/` — login, register, 2FA setup/challenge
+
+### ❌ Manquant (S2-P5 non livré + vues référencées dans web.php inexistantes)
+Ces vues sont déclarées dans `routes/web.php` mais n'existent pas :
+
+| Vue | Route | À créer Sprint 3 |
+|-----|-------|-----------------|
+| `member/subscriptions.blade.php` | GET /dashboard/subscriptions | S3 (S2-P5 reporté) |
+| `member/payments.blade.php` | GET /dashboard/payments | S3 (S2-P5 reporté) |
+| `member/qrcode.blade.php` | GET /dashboard/my-qrcode | S3-T2 |
+| `member/checkins.blade.php` | GET /dashboard/checkins | S3 |
+| `gym/scan.blade.php` | GET /gym/scan | S3-T3 |
+| `gym/checkins.blade.php` | GET /gym/checkins | S3-T8 |
+| `admin/members.blade.php` | GET /admin/members | S3-T6 |
+| `admin/gyms.blade.php` | GET /admin/gyms | S3-T7 |
+
+> Les dashboards (member, admin, gym) sont des stubs intentionnels — à remplir en Sprint 3.
 
 ---
 

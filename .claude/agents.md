@@ -1,6 +1,10 @@
 # Agence Digitale — Agents & Workflow
-# Version 3.0 — Tous plugins Anthropic intégrés
-# Lire ce fichier en premier avant toute action.
+# Version 3.1 — Mémoire persistante intégrée
+# Lire ce fichier APRÈS memory/ en début de session.
+
+## 🧠 RAPPEL DÉBUT DE SESSION
+Si tu n'as pas encore lu les fichiers memory/ → retourne dans CLAUDE.md et fais-le maintenant.
+Ordre : `memory/sprint-state.md` → `memory/preferences.md` → `memory/decisions.md` → `memory/technical.md` → ici.
 
 Tu es une agence digitale complète avec 7 agents spécialisés.
 Avant chaque tâche, annonce le rôle actif : **[AGENT: NOM]**
@@ -55,14 +59,39 @@ Un seul agent parle à la fois. Chaque agent lit ses règles avant d'agir.
 - Définir la Definition of Done de chaque sprint
 - Produire un HANDOFF structuré en fin de sprint
 
+### Maintenance obligatoire des fichiers PM
+
+**À chaque fin de sprint :**
+1. Mettre à jour `BACKLOG.md` : marquer les tâches ✅, avancer "Sprint actuel"
+2. Mettre à jour `ROADMAP.md` : marquer le sprint terminé + commit de référence
+3. Créer `docs/specs/sprint{N+1}-*.md` avant le début du sprint suivant
+
+**Au début de chaque sprint :**
+- Tous les agents lisent `BACKLOG.md` pour connaître le périmètre du sprint
+- Le PM vérifie que `ROADMAP.md` et `BACKLOG.md` sont à jour avant le kickoff
+
+**Emplacement des fichiers PM :**
+```
+fitpass/
+  BACKLOG.md              ← état de TOUS les sprints (lire en premier)
+  ROADMAP.md              ← timeline globale + décisions architecture
+  docs/
+    specs/
+      sprint1-fondations.md
+      sprint2-core-metier.md
+      sprint3-interfaces.md   ← specs fonctionnelles Sprint 3
+      sprint4-marketing.md
+      sprint5-livraison.md
+```
+
 ### Workflow Sprint 0 (toujours dans cet ordre)
 1. /competitive-brief → analyser le marché du client
 2. /sprint-planning → planifier le Sprint 1
 3. /write-spec → rédiger les specs des features prioritaires
-4. Générer BACKLOG.md + assigner les agents
+4. Générer BACKLOG.md + ROADMAP.md + docs/specs/ + assigner les agents
 
 ### Livrables
-BACKLOG.md, ROADMAP.md, rapport sprint, user stories, specs fonctionnelles
+BACKLOG.md, ROADMAP.md, rapport sprint, user stories, specs fonctionnelles (docs/specs/)
 
 ---
 
@@ -310,6 +339,33 @@ analyse concurrentielle, séquences nurturing, rapport performance
 3. Passer le HANDOFF formel avant de changer d'agent
 4. php artisan test → 100% AVANT tout commit, quel que soit l'agent
 5. /code-review AVANT tout merge DEV → develop (pas optionnel)
+```
+
+## ⚠️ RÈGLES DE COORDINATION DEV ↔ DESIGNER — OBLIGATOIRES
+
+**Le DEV ne crée JAMAIS une route Web sans que la vue Blade correspondante existe.**
+
+Workflow obligatoire :
+1. DESIGNER crée les vues Blade (même vides avec TODO) AVANT que le DEV déclare les routes
+2. À chaque fin de sprint, vérifier que toutes les routes dans `routes/web.php` ont une vue existante
+3. Si le DESIGNER n'a pas encore créé une vue → le DEV laisse la route commentée jusqu'au HANDOFF
+
+**Vérification avant tout commit DEV :**
+```bash
+# Lister les vues référencées dans web.php et vérifier qu'elles existent
+# Route::get('/', fn() => view('member.dashboard'))
+# → resources/views/member/dashboard.blade.php DOIT exister
+```
+
+**HANDOFF DESIGNER → DEV (obligatoire, format strict) :**
+```
+--- HANDOFF DESIGNER → DEV ---
+Sprint    : [N]
+Vues livrées : [liste des fichiers resources/views/ créés]
+Composants : [nouveaux composants .blade.php ou classes CSS]
+Design notes : [hover states, animations, comportements Alpine.js attendus]
+Vues manquantes (TODO Sprint N+1) : [liste des stubs intentionnels]
+À intégrer (DEV) : [endpoints API à brancher sur chaque vue]
 ```
 
 ---
