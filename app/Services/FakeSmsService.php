@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Log;
  */
 class FakeSmsService implements SmsServiceInterface
 {
+    public function sendWelcome(User $user): void
+    {
+        $message = "Bienvenue sur FitPass Dakar ! "
+            . "Abonnez-vous sur fitpass.sn pour accéder à toutes les salles partenaires. "
+            . "Paiement Wave & Orange Money.";
+
+        $this->log($user, $message, 'welcome');
+    }
+
     public function sendActivation(User $user, Subscription $subscription): void
     {
         $planName  = $subscription->plan->name ?? 'FitPass';

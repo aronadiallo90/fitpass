@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Jobs\SendWelcomeSms;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,9 @@ class RegisterController extends Controller
         ]);
 
         Auth::login($user);
+
+        // SMS de bienvenue en async
+        SendWelcomeSms::dispatch($user)->onQueue('notifications');
 
         return redirect()->route('member.dashboard')
             ->with('success', 'Bienvenue sur FitPass ! Votre compte a été créé.');

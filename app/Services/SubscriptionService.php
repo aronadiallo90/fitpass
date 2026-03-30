@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\SubscriptionException;
 use App\Jobs\SendActivationSms;
+use App\Jobs\SendExpirationSms;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
@@ -50,6 +51,9 @@ class SubscriptionService implements SubscriptionServiceInterface
     public function expire(Subscription $subscription): Subscription
     {
         $subscription->update(['status' => 'expired']);
+
+        // SMS d'expiration en async
+        SendExpirationSms::dispatch($subscription)->onQueue('notifications');
 
         return $subscription->fresh();
     }

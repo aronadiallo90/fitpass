@@ -7,6 +7,8 @@ use App\Models\User;
 
 interface SmsServiceInterface
 {
+    public function sendWelcome(User $user): void;
+
     public function sendActivation(User $user, Subscription $subscription): void;
 
     public function sendReminder(User $user, Subscription $subscription, int $daysLeft): void;
