@@ -40,6 +40,7 @@ class User extends Authenticatable
     {
         return [
             'password'                   => 'hashed',
+            'is_active'                  => 'boolean',
             'two_factor_recovery_codes'  => 'array',
             'two_factor_confirmed_at'    => 'datetime',
         ];

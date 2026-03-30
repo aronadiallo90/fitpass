@@ -12,14 +12,16 @@ class SubscriptionPlanFactory extends Factory
 {
     public function definition(): array
     {
+        $name = fake()->unique()->word();
+
         return [
-            'name'          => 'Mensuel',
-            'slug'          => 'mensuel',
-            'price_fcfa'    => 25000,
-            'duration_days' => 30,
-            'checkins_limit' => null, // illimité par défaut
-            'is_active'     => true,
-            'sort_order'    => 2,
+            'name'           => ucfirst($name),
+            'slug'           => $name,
+            'price_fcfa'     => fake()->randomElement([15000, 25000, 65000, 220000]),
+            'duration_days'  => fake()->randomElement([30, 90, 365]),
+            'checkins_limit' => null,
+            'is_active'      => true,
+            'sort_order'     => fake()->numberBetween(1, 10),
         ];
     }
 
