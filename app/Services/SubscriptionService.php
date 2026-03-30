@@ -69,7 +69,7 @@ class SubscriptionService implements SubscriptionServiceInterface
     {
         return $user->subscriptions()
             ->where('status', 'active')
-            ->where('expires_at', '>=', now())
+            ->whereDate('expires_at', '>=', today())
             ->with('plan')
             ->latest()
             ->first();

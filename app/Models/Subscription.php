@@ -59,7 +59,7 @@ class Subscription extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('status', 'active')
-            ->where('expires_at', '>=', now());
+            ->whereDate('expires_at', '>=', today());
     }
 
     public function scopePending(Builder $query): Builder

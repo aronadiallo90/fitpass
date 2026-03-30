@@ -25,7 +25,7 @@ class CheckinService implements CheckinServiceInterface
         // 2. Vérifier l'abonnement actif
         $subscription = $user->subscriptions()
             ->where('status', 'active')
-            ->where('expires_at', '>=', now())
+            ->whereDate('expires_at', '>=', today())
             ->latest()
             ->first();
 
