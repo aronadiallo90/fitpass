@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Member;
 use App\Exceptions\SubscriptionException;
 use App\Http\Controllers\Controller;
 use App\Models\SubscriptionPlan;
+use App\Services\Interfaces\PaymentServiceInterface;
 use App\Services\Interfaces\SubscriptionServiceInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,7 +14,8 @@ use Illuminate\View\View;
 class SubscriptionWebController extends Controller
 {
     public function __construct(
-        private readonly SubscriptionServiceInterface $subscriptionService
+        private readonly SubscriptionServiceInterface $subscriptionService,
+        private readonly PaymentServiceInterface $paymentService,
     ) {}
 
     public function index(Request $request): View
@@ -37,9 +39,10 @@ class SubscriptionWebController extends Controller
         $plan = SubscriptionPlan::findOrFail($request->plan_id);
 
         try {
-            $this->subscriptionService->create($request->user(), $plan);
+            $subscription = $this->subscriptionService->create($request->user(), $plan);
+            $this->paymentService->initiate($subscription, $request->input('method'));
             return redirect()->route('member.subscriptions')
-                ->with('success', 'Abonnement créé — procédez au paiement.');
+                ->with('success', 'Abonnement créé — validez le paiement ci-dessous.');
         } catch (SubscriptionException $e) {
             return back()->with('error', $e->getMessage());
         }

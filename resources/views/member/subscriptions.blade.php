@@ -98,6 +98,7 @@
                 <th>Plan</th>
                 <th>Période</th>
                 <th>Statut</th>
+                @if(app()->isLocal())<th style="color: var(--color-warning);">DEV</th>@endif
             </tr>
         </thead>
         <tbody>
@@ -106,9 +107,26 @@
                 <td style="font-family: monospace; font-size: 0.8rem; color: var(--color-text-muted);">{{ $sub->reference }}</td>
                 <td>{{ $sub->plan->name }}</td>
                 <td style="color: var(--color-text-muted); font-size: 0.8rem;">
-                    {{ $sub->starts_at->format('d M Y') }} → {{ $sub->expires_at->format('d M Y') }}
+                    {{ $sub->starts_at?->format('d M Y') ?? '—' }} → {{ $sub->expires_at?->format('d M Y') ?? '—' }}
                 </td>
                 <td><span class="badge badge-{{ $sub->status }}">{{ ucfirst($sub->status) }}</span></td>
+                @if(app()->isLocal())
+                <td>
+                    @if($sub->status === 'pending' && $sub->payments()->where('status', 'pending')->exists())
+                        @php $payment = $sub->payments()->where('status', 'pending')->latest()->first(); @endphp
+                        <form method="POST" action="{{ route('dev.pay.confirm', $payment) }}" style="display:inline;">
+                            @csrf
+                            <button type="submit" style="font-size:0.7rem; padding:0.2rem 0.6rem; background:var(--color-success); color:white; border:none; border-radius:4px; cursor:pointer;">✓ Valider</button>
+                        </form>
+                        <form method="POST" action="{{ route('dev.pay.fail', $payment) }}" style="display:inline; margin-left:0.25rem;">
+                            @csrf
+                            <button type="submit" style="font-size:0.7rem; padding:0.2rem 0.6rem; background:var(--color-danger); color:white; border:none; border-radius:4px; cursor:pointer;">✗ Échouer</button>
+                        </form>
+                    @else
+                        <span style="font-size:0.7rem; color:var(--color-text-muted);">—</span>
+                    @endif
+                </td>
+                @endif
             </tr>
             @endforeach
         </tbody>

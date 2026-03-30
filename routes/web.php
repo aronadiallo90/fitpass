@@ -73,6 +73,16 @@ Route::middleware(['auth', 'role:admin,super_admin', '2fa'])
         Route::get('/payments',      AdminPaymentController::class)->name('payments');
     });
 
+// ── Dev only — simulation paiement (local uniquement) ─────────────────
+if (app()->isLocal()) {
+    Route::middleware('auth')->group(function () {
+        Route::post('/dev/pay/{payment}/confirm', [\App\Http\Controllers\Web\Dev\FakePaymentController::class, 'confirm'])
+            ->name('dev.pay.confirm');
+        Route::post('/dev/pay/{payment}/fail', [\App\Http\Controllers\Web\Dev\FakePaymentController::class, 'fail'])
+            ->name('dev.pay.fail');
+    });
+}
+
 // ── 2FA challenge/setup (admin, sans middleware 2fa pour éviter boucle) ──
 Route::middleware(['auth', 'role:admin,super_admin'])
     ->prefix('two-factor')
