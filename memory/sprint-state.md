@@ -50,6 +50,29 @@ Dernière mise à jour : 2026-03-30 (Sprint 4 démarré)
 | S5-T5 | Recette finale | QA | ⏳ En attente VPS |
 | S5-T6 | Rapport client stakeholder | PM | ✅ (`docs/rapport-sprint5-cloture.md`) |
 
+## Sprint 6A — En cours (semaine 9)
+
+### Tâches
+
+| ID | Tâche | Agent | Statut |
+|----|-------|-------|--------|
+| S6A-T1 | Migrations : gym_activities, gym_programs, gym_photos, alter gyms | DEV | ⏳ |
+| S6A-T2 | Models + Relations : Activity, GymProgram, GymPhoto | DEV | ⏳ |
+| S6A-T3 | GymSearchService : filtres nom/activité/zone + tri distance | DEV | ⏳ |
+| S6A-T4 | API endpoints : search + profil + programmes | DEV | ⏳ |
+| S6A-T5 | Page membre /gyms : recherche live + filtres + carte | DESIGNER+DEV | ⏳ |
+| S6A-T6 | Page /gyms/{slug} : galerie, horaires, cours, boutons | DESIGNER+DEV | ⏳ |
+| S6A-T7 | Leaflet Routing Machine : itinéraire depuis position membre | DEV | ⏳ |
+| S6A-T8 | Admin enrichi : horaires, programmes, photos Cloudinary, tags | DESIGNER+DEV | ⏳ |
+| S6A-T9 | Tests Feature + Unit + recette mobile | QA | ⏳ |
+
+### Parallèles
+| ID | Tâche | Agent | Statut |
+|----|-------|-------|--------|
+| S6A-P1 | Factories + Seeders activités Dakar | DEV | ⏳ |
+| S6A-P2 | Config Cloudinary | DEV | ⏳ |
+| S6A-P3 | GymProfileResource API enrichie | DEV | ⏳ |
+
 ## 🎉 PROJET LIVRÉ — En attente déploiement VPS
 
 ### Actions restantes (côté client — Mamadou)
