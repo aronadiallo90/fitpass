@@ -3,6 +3,32 @@
 
 ## ⚠️ RÈGLES ABSOLUES — s'appliquent en permanence, même après /compact
 
+### Chainage agents — OBLIGATOIRE, aucune exception
+
+Avant chaque tâche, annoncer le rôle actif : **[AGENT: NOM]**
+Lire agents.md AVANT de commencer. Respecter le workflow du sprint en cours.
+
+**Sprint 2 (Core Métier) — séquence exacte :**
+1. **[AGENT: DEV]** → invoquer `/architecture` avant tout nouveau module
+2. **[AGENT: DEV]** → coder Services + API + Resources + Form Requests
+3. **[AGENT: DEV]** → invoquer `/code-review` avant chaque merge
+4. **[AGENT: QA]** → écrire unit tests (Services) + feature tests (API)
+5. **[AGENT: QA]** → `php artisan test` → 100% avant commit
+
+**Sprint 3 (Interfaces) — séquence exacte :**
+1. **[AGENT: DESIGNER]** → invoquer `/design-system` (vérifier cohérence)
+2. **[AGENT: DESIGNER]** → créer dashboards (member, gym_owner, admin)
+3. **[AGENT: DESIGNER]** → invoquer `/design-handoff` après chaque page
+4. **[AGENT: DESIGNER]** → invoquer `/accessibility-review` avant livraison
+5. **[AGENT: DEV]** → intégrations API externes (PayTech, Twilio)
+6. **[AGENT: QA]** → tests intégration + recette mobile
+
+Un agent NE FAIT PAS le travail d'un autre agent.
+Le DEV ne rédige pas les tests — c'est le QA.
+Le DESIGNER ne code pas la logique — c'est le DEV.
+
+---
+
 ### Git — commit obligatoire après chaque feature
 Après toute feature ou fix terminé et testé (php artisan test = vert) :
 ```bash

@@ -299,50 +299,101 @@ analyse concurrentielle, séquences nurturing, rapport performance
 
 ---
 
+## ⚠️ RÈGLES DE CHAINAGE — JAMAIS ENFREINDRE
+
+```
+1. Annoncer TOUJOURS le rôle actif : **[AGENT: NOM]** avant chaque bloc de travail
+2. Un agent NE FAIT PAS le travail d'un autre :
+   - DEV code la logique, JAMAIS les tests → c'est QA
+   - DESIGNER crée les vues, JAMAIS la logique → c'est DEV
+   - QA valide, JAMAIS ne code les features → c'est DEV
+3. Passer le HANDOFF formel avant de changer d'agent
+4. php artisan test → 100% AVANT tout commit, quel que soit l'agent
+5. /code-review AVANT tout merge DEV → develop (pas optionnel)
+```
+
+---
+
 ## Workflow Agile — 5 Sprints avec tous les skills
 
 ### Sprint 0 — Kick-off (PM)
+**[AGENT: PM]**
 1. /start → état des projets en cours
 2. /competitive-brief → analyser le marché du client
 3. /sprint-planning → planifier Sprint 1
 4. /write-spec → specs des features prioritaires
 5. Générer BACKLOG.md + assigner les agents
+→ HANDOFF PM → DEV + DESIGNER + SECURITY
 
 ### Sprint 1 — Fondations (DEV + DESIGNER + SECURITY)
-1. DEV → /architecture → valider choix techniques
-2. DEV → migrations DB + models + seeders + auth
-3. DESIGNER → /design-system → palette + typo + composants
-4. SECURITY → rate limiting + 2FA admin
+**[AGENT: DEV]**
+1. /architecture → valider choix techniques (OBLIGATOIRE avant le code)
+2. Migrations DB + models + seeders + auth
+→ HANDOFF DEV → DESIGNER (en parallèle)
 
-### Sprint 2 — Core Métier (DEV + QA)
-1. DEV → Services (logique métier principale)
-2. DEV → API endpoints + Resources + Form Requests
-3. DEV → /code-review → avant chaque merge
-4. QA → unit tests Services + feature tests API
+**[AGENT: DESIGNER]** (parallèle avec DEV)
+3. /design-system → palette + typo + composants
 
-### Sprint 3 — Interfaces (DESIGNER + DEV + QA)
-1. DESIGNER → dashboards utilisateur + admin
-2. DESIGNER → /design-handoff → specs pour DEV
-3. DESIGNER → /accessibility-review → audit WCAG
-4. DEV → intégrations tierces (paiement, notifs, WhatsApp)
-5. QA → tests intégration + recette mobile
+**[AGENT: SECURITY]** (parallèle)
+4. Rate limiting + 2FA admin
 
-### Sprint 4 — Marketing (DESIGNER + MARKETING)
-1. MARKETING → /competitive-brief → positionnement final
-2. MARKETING → /campaign-plan → plan de lancement
-3. DESIGNER → landing page
-4. MARKETING → /content-creation + /seo-audit
-5. MARKETING → /email-sequence → séquence WhatsApp lancement
-6. DESIGNER → /brand-review → cohérence finale
+→ HANDOFF tous → QA (Definition of Done Sprint 1)
+
+### Sprint 2 — Core Métier (DEV puis QA)
+**[AGENT: DEV]**
+1. /architecture → ADR pour chaque nouveau module (abonnement, paiement, checkin)
+2. Services + interfaces (SubscriptionService, PaymentService, CheckinService, SmsService)
+3. API Controllers + Resources + Form Requests
+4. /code-review → OBLIGATOIRE avant de passer à QA
+→ HANDOFF DEV → QA
+
+**[AGENT: QA]** ← NE PAS SAUTER CETTE ÉTAPE
+5. Unit tests pour chaque Service (tests/Unit/Services/)
+6. Feature tests pour chaque endpoint API (tests/Feature/Api/)
+7. php artisan test → 100% → commit
+
+### Sprint 3 — Interfaces (DESIGNER puis DEV puis QA)
+**[AGENT: DESIGNER]**
+1. /design-system → vérifier cohérence avant de commencer
+2. Dashboard membre + gym owner + admin (Blade + Tailwind + Alpine.js)
+3. /design-handoff → specs pixel-perfect après chaque page
+4. /accessibility-review → audit WCAG 2.1 AA avant livraison
+→ HANDOFF DESIGNER → DEV
+
+**[AGENT: DEV]**
+5. Intégrations API externes (PayTech, Twilio) — remplacer Fake* par vrais services
+6. /code-review → avant merge
+→ HANDOFF DEV → QA
+
+**[AGENT: QA]**
+7. Tests intégration + recette mobile (375px, 768px, 1280px)
+
+### Sprint 4 — Marketing (MARKETING + DESIGNER)
+**[AGENT: MARKETING]**
+1. /competitive-brief → positionnement final
+2. /campaign-plan → plan de lancement
+3. /content-creation + /seo-audit
+4. /email-sequence → séquence WhatsApp lancement
+→ HANDOFF MARKETING → DESIGNER
+
+**[AGENT: DESIGNER]**
+5. Landing page fitpass.sn
+6. /brand-review → cohérence finale
 
 ### Sprint 5 — Livraison (QA + SECURITY + CICD + PM)
-1. QA → /debug → bugs restants
-2. QA → php artisan test → 100% obligatoire
-3. CICD → /deploy-checklist → checklist complète
-4. SECURITY → audit final OWASP
-5. CICD → Docker + pipeline + déploiement VPS
-6. PM → /stakeholder-update → rapport final client
-7. PM → /performance-report → métriques de lancement
+**[AGENT: QA]**
+1. /debug → bugs restants
+2. php artisan test → 100% obligatoire
+
+**[AGENT: SECURITY]**
+3. Audit final OWASP + /deploy-checklist
+
+**[AGENT: CICD]**
+4. Docker + pipeline GitHub Actions + déploiement VPS
+
+**[AGENT: PM]**
+5. /stakeholder-update → rapport final client
+6. /performance-report → métriques de lancement
 
 ---
 
