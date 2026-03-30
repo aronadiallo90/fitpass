@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Web\Admin\AdminDashboardController;
 use App\Http\Controllers\Web\Admin\AdminGymController;
+use App\Http\Controllers\Web\Admin\AdminGymPhotoController;
+use App\Http\Controllers\Web\Admin\AdminGymProgramController;
 use App\Http\Controllers\Web\Admin\AdminMemberController;
 use App\Http\Controllers\Web\Admin\AdminPaymentController;
 use App\Http\Controllers\Web\Auth\LoginController;
@@ -81,6 +83,17 @@ Route::middleware(['auth', 'role:admin,super_admin', '2fa'])
         Route::get('/gyms/{gym}/edit', [AdminGymController::class, 'edit'])->name('gyms.edit');
         Route::put('/gyms/{gym}',    [AdminGymController::class, 'update'])->name('gyms.update');
         Route::patch('/gyms/{gym}/toggle', [AdminGymController::class, 'toggle'])->name('gyms.toggle');
+
+        // Photos salle
+        Route::post('/gyms/{gym}/photos',                         [AdminGymPhotoController::class, 'store'])->name('gyms.photos.store');
+        Route::delete('/gyms/{gym}/photos/{photo}',              [AdminGymPhotoController::class, 'destroy'])->name('gyms.photos.destroy');
+        Route::patch('/gyms/{gym}/photos/{photo}/set-cover',     [AdminGymPhotoController::class, 'setCover'])->name('gyms.photos.cover');
+
+        // Programmes salle
+        Route::post('/gyms/{gym}/programs',                      [AdminGymProgramController::class, 'store'])->name('gyms.programs.store');
+        Route::put('/gyms/{gym}/programs/{program}',             [AdminGymProgramController::class, 'update'])->name('gyms.programs.update');
+        Route::delete('/gyms/{gym}/programs/{program}',          [AdminGymProgramController::class, 'destroy'])->name('gyms.programs.destroy');
+
         Route::get('/payments',      AdminPaymentController::class)->name('payments');
     });
 
