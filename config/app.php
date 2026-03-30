@@ -41,6 +41,8 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'two_factor_bypass' => (bool) env('TWO_FACTOR_BYPASS', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application URL

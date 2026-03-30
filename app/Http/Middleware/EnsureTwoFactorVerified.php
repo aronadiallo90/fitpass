@@ -10,6 +10,11 @@ class EnsureTwoFactorVerified
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // Bypass 2FA en local pour les tests manuels
+        if (config('app.two_factor_bypass', false)) {
+            return $next($request);
+        }
+
         $user = $request->user();
 
         if (!$user || !$user->isAdmin()) {
