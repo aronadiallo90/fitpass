@@ -117,11 +117,17 @@ class GymSearchServiceTest extends TestCase
     #[Test]
     public function it_caches_results(): void
     {
+        $emptyPaginator = new \Illuminate\Pagination\LengthAwarePaginator(
+            collect([]), 0, 15, 1
+        );
+
         Cache::shouldReceive('remember')
             ->once()
-            ->andReturn([]);
+            ->andReturn($emptyPaginator);
 
-        $this->service->search(['q' => 'test']);
+        $result = $this->service->search(['q' => 'test']);
+
+        $this->assertInstanceOf(\Illuminate\Contracts\Pagination\LengthAwarePaginator::class, $result);
     }
 
     #[Test]

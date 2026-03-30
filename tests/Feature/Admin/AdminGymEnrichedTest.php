@@ -153,6 +153,72 @@ class AdminGymEnrichedTest extends TestCase
              ->assertStatus(403);
     }
 
+    #[Test]
+    public function admin_cannot_update_program_of_another_gym(): void
+    {
+        $otherGym = Gym::factory()->create(['owner_id' => $this->owner->id]);
+        $program  = GymProgram::factory()->create(['gym_id' => $otherGym->id]);
+
+        $this->actingAs($this->admin)
+             ->put(route('admin.gyms.programs.update', [$this->gym, $program]), [
+                 'name'             => 'Hack',
+                 'duration_minutes' => 60,
+             ])
+             ->assertStatus(403);
+    }
+
+    #[Test]
+    public function updating_program_without_is_active_deactivates_it(): void
+    {
+        $program = GymProgram::factory()->create(['gym_id' => $this->gym->id, 'is_active' => true]);
+
+        // Soumettre sans is_active (checkbox décochée)
+        $this->actingAs($this->admin)
+             ->put(route('admin.gyms.programs.update', [$this->gym, $program]), [
+                 'name'             => $program->name,
+                 'duration_minutes' => $program->duration_minutes,
+                 // is_active absent = checkbox décochée
+             ]);
+
+        $this->assertFalse($program->fresh()->is_active);
+    }
+
+    #[Test]
+    public function member_cannot_access_admin_programs_route(): void
+    {
+        $member  = User::factory()->create(['role' => 'member']);
+        $program = GymProgram::factory()->create(['gym_id' => $this->gym->id]);
+
+        $this->actingAs($member)
+             ->delete(route('admin.gyms.programs.destroy', [$this->gym, $program]))
+             ->assertForbidden();
+    }
+
+    #[Test]
+    public function member_cannot_access_admin_photos_route(): void
+    {
+        Storage::fake('public');
+        $member = User::factory()->create(['role' => 'member']);
+
+        $this->actingAs($member)
+             ->post(route('admin.gyms.photos.store', $this->gym), [
+                 'photo' => UploadedFile::fake()->image('test.png'),
+             ])
+             ->assertForbidden();
+    }
+
+    #[Test]
+    public function admin_cannot_delete_photo_of_another_gym(): void
+    {
+        Storage::fake('public');
+        $otherGym = Gym::factory()->create(['owner_id' => $this->owner->id]);
+        $photo    = GymPhoto::factory()->create(['gym_id' => $otherGym->id, 'photo_storage_key' => null]);
+
+        $this->actingAs($this->admin)
+             ->delete(route('admin.gyms.photos.destroy', [$this->gym, $photo]))
+             ->assertStatus(403);
+    }
+
     // ─── Photos ─────────────────────────────────────────────────────────────
 
     #[Test]

@@ -4,8 +4,27 @@
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-    #gym-map { height: 45vh; min-height: 260px; }
+    #gym-map { height: 40vh; min-height: 220px; }
+    @media (min-width: 640px) { #gym-map { height: 45vh; } }
     @media (min-width: 768px) { #gym-map { height: 55vh; } }
+
+    /* Grille filtres responsive */
+    .filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .filter-row select { flex: 1 1 130px; min-width: 0; }
+
+    /* Cards grille — s'adapte à 375px */
+    .gyms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+        gap: 1rem;
+    }
+
+    /* Pagination responsive */
+    .pagination-row { display: flex; justify-content: center; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
+    .pagination-row button { padding: 8px 12px; font-size: 0.8rem; }
+    @media (max-width: 400px) {
+        .pagination-row button { padding: 6px 10px; font-size: 0.75rem; }
+    }
 
     .gym-card {
         background: var(--color-bg-soft, #13131A);
@@ -81,11 +100,11 @@
         </div>
 
         {{-- Filtres zone + activité --}}
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <div class="filter-row">
             <select
                 x-model="filters.zone"
                 @change="search()"
-                style="flex:1; min-width:120px; padding:8px 10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,59,59,0.2); border-radius:8px; color:#fff; font-size:0.85rem;"
+                style="padding:8px 10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,59,59,0.2); border-radius:8px; color:#fff; font-size:0.85rem;"
             >
                 <option value="">Toutes les zones</option>
                 @foreach ($zones as $zone)
@@ -96,7 +115,7 @@
             <select
                 x-model="filters.activity"
                 @change="search()"
-                style="flex:1; min-width:140px; padding:8px 10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,59,59,0.2); border-radius:8px; color:#fff; font-size:0.85rem;"
+                style="padding:8px 10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,59,59,0.2); border-radius:8px; color:#fff; font-size:0.85rem;"
             >
                 <option value="">Toutes les activités</option>
                 @foreach ($activities as $activity)
@@ -153,7 +172,7 @@
             <p style="font-size:0.85rem;">Essayez d'élargir vos critères de recherche</p>
         </div>
 
-        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:1rem;">
+        <div class="gyms-grid">
             <template x-for="gym in gyms" :key="gym.id">
                 <a
                     :href="'/dashboard/gyms/' + gym.slug"
@@ -208,11 +227,11 @@
         </div>
 
         {{-- Pagination --}}
-        <div x-show="lastPage > 1" style="display:flex; justify-content:center; gap:0.5rem; margin-top:1.5rem;">
+        <div x-show="lastPage > 1" class="pagination-row">
             <button
                 @click="changePage(currentPage - 1)"
                 :disabled="currentPage <= 1"
-                style="padding:8px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,59,59,0.2); border-radius:8px; color:#fff; cursor:pointer; disabled:opacity:0.4;"
+                style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,59,59,0.2); border-radius:8px; color:#fff; cursor:pointer;"
             >← Précédent</button>
 
             <span style="padding:8px 12px; color:#8888A0; font-size:0.85rem;">
@@ -222,7 +241,7 @@
             <button
                 @click="changePage(currentPage + 1)"
                 :disabled="currentPage >= lastPage"
-                style="padding:8px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,59,59,0.2); border-radius:8px; color:#fff; cursor:pointer;"
+                style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,59,59,0.2); border-radius:8px; color:#fff; cursor:pointer;"
             >Suivant →</button>
         </div>
     </div>

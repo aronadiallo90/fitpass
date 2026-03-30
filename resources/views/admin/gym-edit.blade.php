@@ -13,8 +13,23 @@
     .tab-btn.active { background: rgba(255,59,59,0.15); color: #FF3B3B; }
     .tab-btn:hover:not(.active) { color: #fff; }
 
-    .hours-row { display: grid; grid-template-columns: 90px 1fr 1fr 80px; gap: 8px; align-items: center; margin-bottom: 6px; }
-    #picker-map { height: 300px; border-radius: 8px; }
+    /* Horaires — 4 cols sur desktop, 2 lignes sur mobile */
+    .hours-row { display: grid; grid-template-columns: 90px 1fr 1fr 80px; gap: 8px; align-items: center; margin-bottom: 8px; }
+    @media (max-width: 480px) {
+        .hours-row { grid-template-columns: 1fr 1fr; row-gap: 4px; }
+        .hours-row span:first-child { grid-column: 1 / -1; font-weight: 600; }
+        .hours-row label:last-child { grid-column: 1 / -1; }
+    }
+
+    #picker-map { height: 260px; border-radius: 8px; }
+    @media (min-width: 768px) { #picker-map { height: 300px; } }
+
+    /* Layout 2 cols → 1 col sur mobile */
+    .admin-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .admin-2col-left { display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; align-items: start; }
+    @media (max-width: 640px) {
+        .admin-2col, .admin-2col-left { grid-template-columns: 1fr; }
+    }
 
     .photo-thumb { position: relative; width: 100%; padding-top: 66%; border-radius: 8px; overflow: hidden; }
     .photo-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -66,7 +81,7 @@
     {{-- TAB : INFORMATIONS --}}
     {{-- ═══════════════════════════════════════════════════ --}}
     <div x-show="tab === 'infos'" x-cloak>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+        <div class="admin-2col">
 
             <form method="POST" action="{{ route('admin.gyms.update', $gym) }}" class="card">
                 @csrf @method('PUT')
@@ -112,7 +127,7 @@
                 </div>
 
                 {{-- GPS --}}
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;" class="mb-4">
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(140px,45%), 1fr)); gap:1rem;" class="mb-4">
                     <div>
                         <label class="label">Latitude</label>
                         <input type="number" name="latitude" id="latitude" class="input" step="any" value="{{ old('latitude', $gym->latitude) }}" required>
@@ -124,7 +139,7 @@
                 </div>
 
                 {{-- Téléphones --}}
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;" class="mb-4">
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(160px,45%), 1fr)); gap:1rem;" class="mb-4">
                     <div>
                         <label class="label">Téléphone</label>
                         <input type="text" name="phone" class="input" value="{{ old('phone', $gym->phone) }}" placeholder="+221 77 000 00 00">
@@ -258,7 +273,7 @@
     {{-- TAB : PROGRAMMES --}}
     {{-- ═══════════════════════════════════════════════════ --}}
     <div x-show="tab === 'programs'" x-cloak>
-        <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:1.5rem; align-items:start;">
+        <div class="admin-2col-left">
 
             {{-- Formulaire ajout --}}
             <div class="card">
@@ -274,7 +289,7 @@
                         <label class="label">Description (optionnel)</label>
                         <textarea name="description" class="input" rows="3" placeholder="Détails du programme…"></textarea>
                     </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;" class="mb-4">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(140px,45%), 1fr)); gap:1rem;" class="mb-4">
                         <div>
                             <label class="label">Durée (min)</label>
                             <input type="number" name="duration_minutes" class="input" value="60" min="15" max="300" required>
@@ -365,7 +380,7 @@
     {{-- TAB : PHOTOS --}}
     {{-- ═══════════════════════════════════════════════════ --}}
     <div x-show="tab === 'photos'" x-cloak>
-        <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:1.5rem; align-items:start;">
+        <div class="admin-2col-left">
 
             {{-- Upload --}}
             <div class="card">
@@ -399,7 +414,7 @@
                 @if($gym->photos->isEmpty())
                     <p style="color:#8888A0; font-size:0.85rem;">Aucune photo pour cette salle.</p>
                 @else
-                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:0.75rem;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(150px, 45%), 1fr)); gap:0.75rem;">
                         @foreach($gym->photos as $photo)
                             <div style="position:relative;">
                                 <div class="photo-thumb">

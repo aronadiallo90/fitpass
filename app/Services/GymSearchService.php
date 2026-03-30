@@ -24,17 +24,10 @@ class GymSearchService implements GymSearchServiceInterface
             $lat !== null ? ['lat' => round($lat, 2), 'lng' => round($lng, 2)] : [],
         )));
 
-        // Le cache stocke les IDs ordonnés — on recharge les modèles après
-        // pour éviter de mettre des objets lourds dans Redis
-        $cachedIds = Cache::remember($cacheKey, self::CACHE_TTL_SECONDS, function () use ($filters, $lat, $lng, $perPage) {
-            return $this->buildQuery($filters, $lat, $lng)
-                ->paginate($perPage)
-                ->pluck('id')
-                ->all();
+        // Cache le paginator complet — évite de ré-exécuter la requête à chaque hit
+        return Cache::remember($cacheKey, self::CACHE_TTL_SECONDS, function () use ($filters, $lat, $lng, $perPage) {
+            return $this->buildQuery($filters, $lat, $lng)->paginate($perPage);
         });
-
-        // Requête principale sans cache (pagination réelle sur les IDs)
-        return $this->buildQuery($filters, $lat, $lng)->paginate($perPage);
     }
 
     private function buildQuery(array $filters, ?float $lat, ?float $lng)

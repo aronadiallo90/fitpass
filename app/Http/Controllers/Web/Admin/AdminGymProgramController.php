@@ -34,7 +34,8 @@ class AdminGymProgramController extends Controller
         abort_unless($program->gym_id === $gym->id, 403);
 
         $data = $request->validate($this->rules);
-        $data['is_active'] = (bool) ($data['is_active'] ?? false);
+        // Checkbox HTML : absente du POST si décochée — on lit explicitement la valeur
+        $data['is_active'] = $request->boolean('is_active');
 
         $program->update($data);
 

@@ -4,7 +4,8 @@
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-    #gym-detail-map { height: 220px; border-radius: 12px; overflow: hidden; }
+    #gym-detail-map { height: 200px; border-radius: 12px; overflow: hidden; }
+    @media (min-width: 640px) { #gym-detail-map { height: 250px; } }
 
     .activity-pill {
         display: inline-flex; align-items: center; gap: 4px;
@@ -22,16 +23,25 @@
     .open-badge  { color: #22C55E; font-weight: 600; }
     .closed-badge{ color: #EF4444; }
 
-    /* Galerie photos */
-    .photo-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
-    .photo-gallery img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: opacity 0.2s; }
+    /* Galerie photos — responsive 375px */
+    .photo-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(140px, 45%), 1fr)); gap: 8px; }
+    .photo-gallery img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: opacity 0.2s; }
     .photo-gallery img:hover { opacity: 0.85; }
+    @media (min-width: 640px) { .photo-gallery img { height: 120px; } }
+
+    /* En-tête photo */
+    .gym-hero { position:relative; margin: -1rem -1rem 1.5rem; height:200px; background:#13131A; overflow:hidden; border-radius: 0 0 16px 16px; }
+    @media (min-width: 640px) { .gym-hero { height: 260px; } }
+
+    /* Boutons action responsive */
+    .action-buttons { display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+    .action-buttons a { flex:1; min-width:120px; }
 
     /* Lightbox simple */
     .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; }
     .lightbox.open { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
-    .lightbox-close { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; color: #fff; cursor: pointer; }
+    .lightbox img { max-width: 92vw; max-height: 85vh; border-radius: 8px; }
+    .lightbox-close { position: absolute; top: 0.75rem; right: 1rem; font-size: 2rem; color: #fff; cursor: pointer; min-width: 44px; min-height: 44px; display:flex; align-items:center; justify-content:center; }
 </style>
 @endpush
 
@@ -57,7 +67,7 @@
     <div x-show="gym && !loading">
 
         {{-- ── En-tête : photo cover + nom ── --}}
-        <div style="position:relative; margin: -1rem -1rem 1.5rem; height:220px; background:#13131A; overflow:hidden; border-radius: 0 0 16px 16px;">
+        <div class="gym-hero">
             <template x-if="coverPhoto">
                 <img :src="coverPhoto" :alt="gym?.name" style="width:100%; height:100%; object-fit:cover; opacity:0.7;">
             </template>
@@ -81,7 +91,7 @@
         </div>
 
         {{-- ── Boutons d'action ── --}}
-        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+        <div class="action-buttons">
             <a
                 :href="'https://wa.me/' + (gym?.phone_whatsapp || gym?.phone)"
                 x-show="gym?.phone_whatsapp || gym?.phone"
