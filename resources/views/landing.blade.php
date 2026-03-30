@@ -71,7 +71,7 @@
 
         {{-- Sous-titre --}}
         <p style="font-size: clamp(1rem, 3vw, 1.25rem); color: var(--color-text-muted); max-width: 540px; margin: 0 auto 2.5rem; line-height: 1.6;">
-            Accédez à toutes nos salles partenaires avec un seul abonnement.<br>
+            Accédez à tous nos gyms et salles de sport partenaires à Dakar avec un seul abonnement.<br>
             Paiement Wave & Orange Money. Sans engagement.
         </p>
 
@@ -231,9 +231,9 @@
 
         <div style="text-align: center; margin-bottom: 3rem;">
             <h2 style="font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3rem); text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-text);">
-                {{ $gymsCount }}+ salles à Dakar
+                {{ $gymsCount }}+ gyms et salles à Dakar
             </h2>
-            <p style="color: var(--color-text-muted); margin-top: 0.75rem;">Toutes accessibles avec votre abonnement FitPass.</p>
+            <p style="color: var(--color-text-muted); margin-top: 0.75rem;">Musculation · Yoga · Fitness · Arts martiaux · CrossFit — tous accessibles avec votre abonnement.</p>
         </div>
 
         <div class="map-container" id="landing-map" style="height: 420px; margin-bottom: 2rem;"></div>

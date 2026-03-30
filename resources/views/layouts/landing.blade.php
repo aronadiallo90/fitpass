@@ -25,6 +25,58 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    {{-- Schema.org — Rich snippets Google (@@ pour échapper @ dans Blade) --}}
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Service",
+        "name": "FitPass Dakar",
+        "description": "Abonnement universel donnant accès à toutes les salles de sport partenaires à Dakar. Paiement Wave et Orange Money.",
+        "url": "{{ url('/') }}",
+        "areaServed": {
+            "@@type": "City",
+            "name": "Dakar",
+            "addressCountry": "SN"
+        },
+        "provider": {
+            "@@type": "Organization",
+            "name": "FitPass Dakar",
+            "url": "{{ url('/') }}",
+            "contactPoint": {
+                "@@type": "ContactPoint",
+                "contactType": "customer support",
+                "availableLanguage": "French"
+            }
+        },
+        "offers": [
+            {
+                "@@type": "Offer",
+                "name": "Plan Découverte",
+                "priceCurrency": "XOF",
+                "price": "15000"
+            },
+            {
+                "@@type": "Offer",
+                "name": "Plan Mensuel",
+                "priceCurrency": "XOF",
+                "price": "25000"
+            },
+            {
+                "@@type": "Offer",
+                "name": "Plan Trimestriel",
+                "priceCurrency": "XOF",
+                "price": "65000"
+            },
+            {
+                "@@type": "Offer",
+                "name": "Plan Annuel",
+                "priceCurrency": "XOF",
+                "price": "220000"
+            }
+        ]
+    }
+    </script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
