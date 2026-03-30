@@ -16,10 +16,16 @@ use App\Http\Controllers\Web\Member\MapController;
 use App\Http\Controllers\Web\Member\PaymentWebController;
 use App\Http\Controllers\Web\Member\QrCodeController;
 use App\Http\Controllers\Web\Member\SubscriptionWebController;
+use App\Http\Controllers\Web\LandingController;
+use App\Http\Controllers\Web\SeoController;
 use Illuminate\Support\Facades\Route;
 
-// Pages publiques
-Route::get('/', fn() => view('welcome'))->name('home');
+// Landing page publique
+Route::get('/', LandingController::class)->name('home');
+
+// SEO
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt',  [SeoController::class, 'robots'])->name('robots');
 
 // Auth — invités seulement
 Route::middleware('guest')->group(function () {
