@@ -12,6 +12,7 @@ use App\Http\Controllers\Web\Gym\GymDashboardController;
 use App\Http\Controllers\Web\Gym\GymScanController;
 use App\Http\Controllers\Web\Member\CheckinWebController;
 use App\Http\Controllers\Web\Member\DashboardController;
+use App\Http\Controllers\Web\Member\GymDirectoryController;
 use App\Http\Controllers\Web\Member\MapController;
 use App\Http\Controllers\Web\Member\PaymentWebController;
 use App\Http\Controllers\Web\Member\QrCodeController;
@@ -51,6 +52,8 @@ Route::middleware(['auth', 'role:member'])
         Route::get('/payments',      PaymentWebController::class)->name('payments');
         Route::get('/checkins',      CheckinWebController::class)->name('checkins');
         Route::get('/map',           MapController::class)->name('map');
+        Route::get('/gyms',          [GymDirectoryController::class, 'index'])->name('gyms');
+        Route::get('/gyms/{slug}',   [GymDirectoryController::class, 'show'])->name('gyms.show');
     });
 
 // ── Dashboard gym owner ─────────────────────────────────
