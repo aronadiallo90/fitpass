@@ -7,8 +7,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Cache\RateLimiting\Limit;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -32,8 +30,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'api/v1/webhooks/paytech',
         ]);
 
-        // Rate limiters
-        $middleware->throttleWithRedis();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Throwable $e, Request $request) {
@@ -41,18 +37,5 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json(['message' => 'Une erreur est survenue.'], 500);
             }
         });
-    })
-    ->booted(function () {
-        RateLimiter::for('api', fn(Request $r) =>
-            Limit::perMinute(60)->by($r->user()?->id ?: $r->ip())
-        );
-
-        RateLimiter::for('auth', fn(Request $r) =>
-            Limit::perMinute(10)->by($r->ip())
-        );
-
-        RateLimiter::for('admin', fn(Request $r) =>
-            Limit::perMinute(30)->by($r->user()?->id ?: $r->ip())
-        );
     })
     ->create();

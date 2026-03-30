@@ -19,7 +19,7 @@ Route::prefix('v1')->name('api.')->group(function () {
 
     // Validation QR code (bornes autonomes — token statique par salle)
     Route::post('checkins/validate', [\App\Http\Controllers\Api\CheckinController::class, 'store'])
-        ->middleware('throttle:60,1')
+        ->middleware('throttle:checkins')
         ->name('checkins.validate');
 
     // Webhook PayTech (pas d'auth Sanctum, pas de CSRF)
