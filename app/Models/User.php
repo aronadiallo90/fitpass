@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'qr_token',
+        'is_active',
         'two_factor_secret',
         'two_factor_recovery_codes',
         'two_factor_confirmed_at',
@@ -79,6 +80,16 @@ class User extends Authenticatable
     public function gyms(): HasMany
     {
         return $this->hasMany(Gym::class, 'owner_id');
+    }
+
+    public function gym(): HasOne
+    {
+        return $this->hasOne(Gym::class, 'owner_id');
+    }
+
+    public function latestCheckin(): HasOne
+    {
+        return $this->hasOne(GymCheckin::class)->latestOfMany();
     }
 
     public function smsLogs(): HasMany

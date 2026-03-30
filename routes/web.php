@@ -1,7 +1,20 @@
 <?php
 
+use App\Http\Controllers\Web\Admin\AdminDashboardController;
+use App\Http\Controllers\Web\Admin\AdminGymController;
+use App\Http\Controllers\Web\Admin\AdminMemberController;
+use App\Http\Controllers\Web\Admin\AdminPaymentController;
 use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\RegisterController;
+use App\Http\Controllers\Web\Auth\TwoFactorController;
+use App\Http\Controllers\Web\Gym\GymCheckinController;
+use App\Http\Controllers\Web\Gym\GymDashboardController;
+use App\Http\Controllers\Web\Member\CheckinWebController;
+use App\Http\Controllers\Web\Member\DashboardController;
+use App\Http\Controllers\Web\Member\MapController;
+use App\Http\Controllers\Web\Member\PaymentWebController;
+use App\Http\Controllers\Web\Member\QrCodeController;
+use App\Http\Controllers\Web\Member\SubscriptionWebController;
 use Illuminate\Support\Facades\Route;
 
 // Pages publiques
@@ -9,56 +22,65 @@ Route::get('/', fn() => view('welcome'))->name('home');
 
 // Auth — invités seulement
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'create'])->name('login');
-    Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+    Route::get('/login',    [LoginController::class, 'create'])->name('login');
+    Route::post('/login',   [LoginController::class, 'store'])->name('login.store');
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
-    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+    Route::post('/register',[RegisterController::class, 'store'])->name('register.store');
 });
 
 Route::post('/logout', [LoginController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
 
-// Dashboard membre
+// ── Dashboard membre ────────────────────────────────────
 Route::middleware(['auth', 'role:member'])
     ->prefix('dashboard')
     ->name('member.')
     ->group(function () {
-        Route::get('/', fn() => view('member.dashboard'))->name('dashboard');
-        Route::get('/my-qrcode', fn() => view('member.qrcode'))->name('qrcode');
-        Route::get('/subscriptions', fn() => view('member.subscriptions'))->name('subscriptions');
-        Route::get('/payments', fn() => view('member.payments'))->name('payments');
-        Route::get('/checkins', fn() => view('member.checkins'))->name('checkins');
+        Route::get('/',              DashboardController::class)->name('dashboard');
+        Route::get('/my-qrcode',     QrCodeController::class)->name('qrcode');
+        Route::get('/subscriptions', [SubscriptionWebController::class, 'index'])->name('subscriptions');
+        Route::post('/subscriptions',[SubscriptionWebController::class, 'store'])->name('subscriptions.store');
+        Route::get('/payments',      PaymentWebController::class)->name('payments');
+        Route::get('/checkins',      CheckinWebController::class)->name('checkins');
+        Route::get('/map',           MapController::class)->name('map');
     });
 
-// Dashboard gym owner
+// ── Dashboard gym owner ─────────────────────────────────
 Route::middleware(['auth', 'role:gym_owner'])
     ->prefix('gym')
     ->name('gym.')
     ->group(function () {
-        Route::get('/', fn() => view('gym.dashboard'))->name('dashboard');
-        Route::get('/scan', fn() => view('gym.scan'))->name('scan');
-        Route::get('/checkins', fn() => view('gym.checkins'))->name('checkins');
+        Route::get('/',       GymDashboardController::class)->name('dashboard');
+        Route::get('/scan',   fn() => view('gym.scan'))->name('scan');
+        Route::get('/checkins', GymCheckinController::class)->name('checkins');
     });
 
-// Dashboard admin (+ 2FA obligatoire)
+// ── Dashboard admin (+ 2FA obligatoire) ────────────────
 Route::middleware(['auth', 'role:admin,super_admin', '2fa'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/', fn() => view('admin.dashboard'))->name('dashboard');
-        Route::get('/members', fn() => view('admin.members'))->name('members');
-        Route::get('/gyms', fn() => view('admin.gyms'))->name('gyms');
+        Route::get('/',      AdminDashboardController::class)->name('dashboard');
+        Route::get('/members', [AdminMemberController::class, 'index'])->name('members');
+        Route::patch('/members/{user}/toggle', [AdminMemberController::class, 'toggle'])->name('members.toggle');
+        Route::get('/gyms',          [AdminGymController::class, 'index'])->name('gyms');
+        Route::get('/gyms/create',   [AdminGymController::class, 'create'])->name('gyms.create');
+        Route::post('/gyms',         [AdminGymController::class, 'store'])->name('gyms.store');
+        Route::get('/gyms/{gym}/edit', [AdminGymController::class, 'edit'])->name('gyms.edit');
+        Route::put('/gyms/{gym}',    [AdminGymController::class, 'update'])->name('gyms.update');
+        Route::patch('/gyms/{gym}/toggle', [AdminGymController::class, 'toggle'])->name('gyms.toggle');
+        Route::get('/payments',      AdminPaymentController::class)->name('payments');
     });
 
-// 2FA challenge/setup (admin uniquement, sans 2fa middleware pour éviter boucle)
+// ── 2FA challenge/setup (admin, sans middleware 2fa pour éviter boucle) ──
 Route::middleware(['auth', 'role:admin,super_admin'])
     ->prefix('two-factor')
     ->name('two-factor.')
     ->group(function () {
-        Route::get('/setup', [\App\Http\Controllers\Web\Auth\TwoFactorController::class, 'setup'])->name('setup');
-        Route::post('/confirm', [\App\Http\Controllers\Web\Auth\TwoFactorController::class, 'confirm'])->name('confirm');
-        Route::get('/challenge', fn() => view('auth.two-factor-challenge'))->name('challenge');
-        Route::post('/verify', [\App\Http\Controllers\Web\Auth\TwoFactorController::class, 'verify'])->name('verify');
-        Route::post('/recovery', [\App\Http\Controllers\Web\Auth\TwoFactorController::class, 'recovery'])->name('recovery');
+        Route::get('/setup',    [TwoFactorController::class, 'setup'])->name('setup');
+        Route::post('/confirm', [TwoFactorController::class, 'confirm'])->name('confirm');
+        Route::get('/challenge',fn() => view('auth.two-factor-challenge'))->name('challenge');
+        Route::post('/verify',  [TwoFactorController::class, 'verify'])->name('verify');
+        Route::post('/recovery',[TwoFactorController::class, 'recovery'])->name('recovery');
     });

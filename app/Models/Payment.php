@@ -42,6 +42,12 @@ class Payment extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Accessor pour simplifier les vues
+    public function getAmountAttribute(): int
+    {
+        return $this->amount_fcfa;
+    }
+
     public function isCompleted(): bool
     {
         return $this->status === 'completed';

@@ -43,6 +43,17 @@ class SubscriptionPlan extends Model
         return $query->where('is_active', true)->orderBy('sort_order');
     }
 
+    // Accessors pour simplifier les vues
+    public function getPriceAttribute(): int
+    {
+        return $this->price_fcfa;
+    }
+
+    public function getTypeAttribute(): string
+    {
+        return $this->checkins_limit !== null ? 'decouverte' : 'unlimited';
+    }
+
     public function isDiscovery(): bool
     {
         return $this->checkins_limit !== null;
