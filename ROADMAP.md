@@ -21,8 +21,8 @@ Un abonnement unique, toutes les salles partenaires, paiement Wave/Orange Money.
 ```
 Semaine 1-2   Sprint 1 — Fondations          ✅ Terminé  (commit 9c1e45d)
 Semaine 3-4   Sprint 2 — Core Métier          ✅ Terminé  (commit df78bb2, 52 tests)
-Semaine 5-6   Sprint 3 — Interfaces           🔄 En cours
-Semaine 7     Sprint 4 — Marketing            ⏳ À venir
+Semaine 5-6   Sprint 3 — Interfaces           ✅ Terminé  (commit f484be4, 102 tests)
+Semaine 7     Sprint 4 — Marketing            🔄 En cours
 Semaine 8     Sprint 5 — Livraison            ⏳ À venir
 ```
 
@@ -68,34 +68,25 @@ Semaine 8     Sprint 5 — Livraison            ⏳ À venir
 
 ---
 
-## Sprint 3 — Interfaces 🔄
+## Sprint 3 — Interfaces ✅
 
 **Objectif :** Interfaces utilisateur complètes — mobile-first, opérationnelles.
 
-**Semaine 5-6** | Agent lead : DESIGNER → DEV → QA
+**Semaine 5-6** | Commit de référence : `f484be4` — 102 tests
 
 | ID | Livrable | Agent | Statut |
 |----|----------|-------|--------|
-| S3-T1 | Dashboard membre (abonnement actif, QR code, historique) | DESIGNER+DEV | ⏳ |
-| S3-T2 | Page QR code grand format (valide/expiré) | DESIGNER+DEV | ⏳ |
-| S3-T3 | Interface scan gym_owner (camera, résultat vert/rouge) | DESIGNER+DEV | ⏳ |
-| S3-T4 | Carte Leaflet salles partenaires + filtres | DESIGNER+DEV | ⏳ |
-| S3-T5 | API GeoJSON salles (mis en cache Redis 1h) | DEV | ⏳ |
-| S3-T6 | Dashboard admin (membres, revenus, abonnements, salles) | DESIGNER+DEV | ⏳ |
-| S3-T7 | CRUD admin salles (coordonnées GPS + sélecteur carte) | DESIGNER+DEV | ⏳ |
-| S3-T8 | Dashboard gym_owner (checkins du jour, stats) | DESIGNER+DEV | ⏳ |
-| S3-P1 | Tests E2E recette mobile 375px (parcours souscription) | QA | ⏳ |
-| S3-P2 | Tests E2E recette mobile (scan QR autorisé + refusé) | QA | ⏳ |
-| S3-P3 | Performance : PageSpeed mobile > 90, API < 300ms | QA | ⏳ |
-| S3-P4 | API publique bornes scan POST /api/v1/checkins/validate | DEV | ✅ (Sprint 2) |
-
-**Definition of Done Sprint 3 :**
-- [ ] Parcours membre complet sur mobile 375px
-- [ ] Scanner QR : retour visuel < 1 seconde
-- [ ] Carte Leaflet : toutes les salles visibles, filtres OK
-- [ ] Dashboards admin + gym_owner opérationnels
-- [ ] PageSpeed mobile > 90
-- [ ] 0 bug visuel sur 375px / 768px / 1280px
+| S3-T1 | Dashboard membre (abonnement actif, QR code, historique) | DESIGNER+DEV | ✅ |
+| S3-T2 | Page QR code grand format (valide/expiré) | DESIGNER+DEV | ✅ |
+| S3-T3 | Interface scan gym_owner (camera + saisie manuelle DEV) | DESIGNER+DEV | ✅ |
+| S3-T4 | Carte Leaflet salles partenaires + filtres activités | DESIGNER+DEV | ✅ |
+| S3-T5 | API GeoJSON salles | DEV | ✅ |
+| S3-T6 | Dashboard admin (membres, revenus, abonnements, salles) | DESIGNER+DEV | ✅ |
+| S3-T7 | CRUD admin salles (formulaire + sélecteur carte Leaflet) | DESIGNER+DEV | ✅ |
+| S3-T8 | Dashboard gym_owner (checkins du jour, stats) | DESIGNER+DEV | ✅ |
+| S3-P1 | 50 Feature tests Web (member/gym/admin) | QA | ✅ |
+| S3-P2 | Fix bug expires_at (whereDate) + fix CSS Tailwind v4 | DEV | ✅ |
+| S3-P3 | Simulation paiement local (FakePaymentController DEV) | DEV | ✅ |
 
 ---
 

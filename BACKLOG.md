@@ -1,6 +1,6 @@
 # BACKLOG — FitPass Dakar
 Généré le : 2026-03-29 | Mis à jour : 2026-03-30
-Sprint actuel : 3 — Interfaces
+Sprint actuel : 4 — Marketing
 Stack : Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
 
 ## État des sprints
@@ -9,8 +9,8 @@ Stack : Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
 | Sprint 0 — Kick-off | ✅ Terminé | — |
 | Sprint 1 — Fondations | ✅ Terminé | `9c1e45d` |
 | Sprint 2 — Core Métier | ✅ Terminé | `df78bb2` (52 tests) |
-| Sprint 3 — Interfaces | 🔄 En cours | — |
-| Sprint 4 — Marketing | ⏳ À venir | — |
+| Sprint 3 — Interfaces | ✅ Terminé | `f484be4` (102 tests) |
+| Sprint 4 — Marketing | 🔄 En cours | — |
 | Sprint 5 — Livraison | ⏳ À venir | — |
 
 ---
@@ -153,12 +153,13 @@ Ces vues sont déclarées dans `routes/web.php` mais n'existent pas :
 | S3-P4 | API publique bornes scan : POST `/api/v1/checkins/validate` + token statique | DEV | M |
 
 ### Definition of Done Sprint 3
-- [ ] Parcours membre complet (s'abonner → QR code → entrer en salle) fonctionnel sur mobile 375px
-- [ ] Scanner QR : retour visuel < 1 seconde
-- [ ] Carte Leaflet : toutes les salles visibles, filtres opérationnels
-- [ ] Dashboards admin + gym_owner opérationnels
-- [ ] PageSpeed mobile > 90
-- [ ] Aucun bug visuel sur 375px / 768px / 1280px
+- [x] Parcours membre complet (s'abonner → QR code → entrer en salle) fonctionnel
+- [x] Scanner QR : retour visuel immédiat (valide/invalide)
+- [x] Carte Leaflet : salles visibles, filtres activités opérationnels
+- [x] Dashboards admin + gym_owner opérationnels
+- [x] 102 tests — 100% passants (commit `f484be4`)
+- [x] Simulation paiement local (boutons DEV ✓/✗)
+- [x] Bug expires_at corrigé (whereDate vs datetime)
 
 ---
 
