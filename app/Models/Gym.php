@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -21,11 +22,13 @@ class Gym extends Model
         'slug',
         'description',
         'address',
+        'zone',
         'latitude',
         'longitude',
-        'activities',
+        'activities',     // JSON legacy — utilisé par la landing page
         'opening_hours',
         'phone',
+        'phone_whatsapp',
         'photo_url',
         'api_token',
         'is_active',
@@ -36,7 +39,7 @@ class Gym extends Model
         return [
             'latitude'      => 'decimal:8',
             'longitude'     => 'decimal:8',
-            'activities'    => 'array',
+            'activities'    => 'array',  // JSON legacy — landing page
             'opening_hours' => 'array',
             'is_active'     => 'boolean',
         ];
@@ -61,6 +64,26 @@ class Gym extends Model
     public function checkins(): HasMany
     {
         return $this->hasMany(GymCheckin::class);
+    }
+
+    public function activities(): BelongsToMany
+    {
+        return $this->belongsToMany(GymActivity::class, 'gym_activity');
+    }
+
+    public function programs(): HasMany
+    {
+        return $this->hasMany(GymProgram::class);
+    }
+
+    public function photos(): HasMany
+    {
+        return $this->hasMany(GymPhoto::class)->orderBy('display_order');
+    }
+
+    public function coverPhoto(): HasMany
+    {
+        return $this->hasMany(GymPhoto::class)->where('is_cover', true)->limit(1);
     }
 
     public function scopeActive(Builder $query): Builder

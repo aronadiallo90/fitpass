@@ -6,9 +6,11 @@ use App\Services\CheckinService;
 use App\Services\FakePaymentService;
 use App\Services\FakeSmsService;
 use App\Services\Interfaces\CheckinServiceInterface;
+use App\Services\Interfaces\GymPhotoServiceInterface;
 use App\Services\Interfaces\PaymentServiceInterface;
 use App\Services\Interfaces\SmsServiceInterface;
 use App\Services\Interfaces\SubscriptionServiceInterface;
+use App\Services\LocalGymPhotoService;
 use App\Services\SubscriptionService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -25,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PaymentServiceInterface::class, FakePaymentService::class);
         $this->app->bind(CheckinServiceInterface::class, CheckinService::class);
         $this->app->bind(SmsServiceInterface::class, FakeSmsService::class);
+        // Photos : LocalGymPhotoService par défaut — Cloudinary en prod via CLOUDINARY_URL
+        $this->app->bind(GymPhotoServiceInterface::class, LocalGymPhotoService::class);
     }
 
     public function boot(): void
