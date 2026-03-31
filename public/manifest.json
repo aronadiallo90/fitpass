@@ -1,0 +1,45 @@
+{
+    "name": "FitPass Dakar",
+    "short_name": "FitPass",
+    "description": "Abonnement universel — accès à toutes les salles de sport partenaires à Dakar",
+    "start_url": "/dashboard",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "theme_color": "#FF3B3B",
+    "background_color": "#0A0A0F",
+    "lang": "fr",
+    "categories": ["sports", "health", "fitness"],
+    "icons": [
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icons/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Mon abonnement",
+            "url": "/member/subscription",
+            "description": "Voir mon abonnement en cours"
+        },
+        {
+            "name": "Salles partenaires",
+            "url": "/gyms",
+            "description": "Trouver une salle près de moi"
+        }
+    ]
+}
