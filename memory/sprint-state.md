@@ -1,6 +1,6 @@
 # Sprint State — FitPass Dakar
 État courant du projet. Mettre à jour à chaque fin de sprint.
-Dernière mise à jour : 2026-03-30 (Sprint 4 démarré)
+Dernière mise à jour : 2026-03-31 (Sprint 6B ouvert)
 
 ---
 
