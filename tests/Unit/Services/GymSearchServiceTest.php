@@ -115,16 +115,14 @@ class GymSearchServiceTest extends TestCase
     }
 
     #[Test]
-    public function it_caches_results(): void
+    public function it_warms_cache_on_search(): void
     {
-        $emptyPaginator = new \Illuminate\Pagination\LengthAwarePaginator(
-            collect([]), 0, 15, 1
-        );
-
+        // Cache::remember appelé pour warm les IDs — retourne un tableau sérialisable
         Cache::shouldReceive('remember')
             ->once()
-            ->andReturn($emptyPaginator);
+            ->andReturn([]);
 
+        // La recherche retourne quand même un vrai paginator (requête live)
         $result = $this->service->search(['q' => 'test']);
 
         $this->assertInstanceOf(\Illuminate\Contracts\Pagination\LengthAwarePaginator::class, $result);

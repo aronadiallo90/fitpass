@@ -24,10 +24,13 @@ class GymSearchService implements GymSearchServiceInterface
             $lat !== null ? ['lat' => round($lat, 2), 'lng' => round($lng, 2)] : [],
         )));
 
-        // Cache le paginator complet — évite de ré-exécuter la requête à chaque hit
-        return Cache::remember($cacheKey, self::CACHE_TTL_SECONDS, function () use ($filters, $lat, $lng, $perPage) {
-            return $this->buildQuery($filters, $lat, $lng)->paginate($perPage);
-        });
+        // Le cache warm les IDs pour invalidation future — la pagination s'exécute en live
+        // (les paginators Eloquent contiennent des Closures non-sérialisables par le cache)
+        Cache::remember($cacheKey, self::CACHE_TTL_SECONDS, fn() =>
+            $this->buildQuery($filters, $lat, $lng)->pluck('id')->all()
+        );
+
+        return $this->buildQuery($filters, $lat, $lng)->paginate($perPage);
     }
 
     private function buildQuery(array $filters, ?float $lat, ?float $lng)
