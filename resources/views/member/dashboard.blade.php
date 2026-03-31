@@ -75,6 +75,27 @@
 
     </div>
 
+    {{-- CTA Trouver une salle --}}
+    <a href="{{ route('member.gyms') }}"
+       style="display:flex; align-items:center; justify-content:space-between; gap:1rem;
+              background: linear-gradient(135deg, rgba(255,59,59,0.15), rgba(255,140,0,0.1));
+              border: 1px solid rgba(255,59,59,0.3); border-radius: 12px;
+              padding: 1.25rem 1.5rem; text-decoration: none; transition: border-color 0.2s;"
+       onmouseover="this.style.borderColor='rgba(255,59,59,0.6)'"
+       onmouseout="this.style.borderColor='rgba(255,59,59,0.3)'">
+        <div>
+            <div style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+                🔍 Trouver une salle
+            </div>
+            <div style="font-size: 0.82rem; color: var(--color-text-muted);">
+                Recherchez par zone, activité ou à proximité de vous
+            </div>
+        </div>
+        <svg style="width:24px; height:24px; color:#FF3B3B; flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+    </a>
+
     {{-- Dernières entrées --}}
     <div class="card-static" style="padding: 0; overflow: hidden;">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border);">

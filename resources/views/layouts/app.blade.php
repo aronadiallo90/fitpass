@@ -31,6 +31,7 @@
                 <!-- Nav links desktop -->
                 <div style="display: none;" class="md-flex">
                     <a href="{{ route('member.dashboard') }}" class="{{ request()->routeIs('member.dashboard') ? 'nav-link-active' : 'nav-link' }}">Dashboard</a>
+                    <a href="{{ route('member.gyms') }}" class="{{ request()->routeIs('member.gyms*') ? 'nav-link-active' : 'nav-link' }}" style="margin-left: 0.25rem;">Salles</a>
                     <a href="{{ route('member.qrcode') }}" class="{{ request()->routeIs('member.qrcode') ? 'nav-link-active' : 'nav-link' }}" style="margin-left: 0.25rem;">Mon QR Code</a>
                     <a href="{{ route('member.subscriptions') }}" class="{{ request()->routeIs('member.subscriptions') ? 'nav-link-active' : 'nav-link' }}" style="margin-left: 0.25rem;">Abonnement</a>
                 </div>
