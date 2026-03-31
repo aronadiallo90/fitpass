@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Route;
 // Landing page publique
 Route::get('/', LandingController::class)->name('home');
 
+// PWA
+Route::get('/offline', fn () => view('offline'))->name('offline');
+
 // SEO
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt',  [SeoController::class, 'robots'])->name('robots');
