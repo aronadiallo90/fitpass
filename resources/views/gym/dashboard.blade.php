@@ -21,7 +21,7 @@
 </div>
 
 {{-- Entrées du jour --}}
-<div class="card-static" style="padding: 0; overflow: hidden; margin-bottom: 1.5rem;">
+<div class="card-static" style="padding: 0; margin-bottom: 1.5rem;">
     <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
         <span class="kpi-label">Entrées aujourd'hui</span>
         <span style="font-size: 0.75rem; color: var(--color-text-muted);">{{ now()->format('d M Y') }}</span>
@@ -32,7 +32,7 @@
             <p class="empty-state-text">Aucune entrée pour l'instant</p>
         </div>
     @else
-    <table class="data-table">
+    <div class="table-responsive"><table class="data-table">
         <thead>
             <tr>
                 <th>Membre</th>
@@ -49,12 +49,12 @@
             </tr>
             @endforeach
         </tbody>
-    </table>
+    </table></div>
     @endif
 </div>
 
 {{-- Historique 30 derniers jours --}}
-<div class="card-static" style="padding: 0; overflow: hidden;">
+<div class="card-static" style="padding: 0;">
     <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
         <span class="kpi-label">Historique récent</span>
         <a href="{{ route('gym.checkins') }}" style="font-size: 0.75rem; color: var(--color-primary); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em;">Tout voir →</a>
@@ -65,7 +65,7 @@
             <p class="empty-state-text">Aucune donnée disponible</p>
         </div>
     @else
-    <table class="data-table">
+    <div class="table-responsive"><table class="data-table">
         <thead>
             <tr>
                 <th>Membre</th>
@@ -84,7 +84,7 @@
             </tr>
             @endforeach
         </tbody>
-    </table>
+    </table></div>
     @endif
 </div>
 

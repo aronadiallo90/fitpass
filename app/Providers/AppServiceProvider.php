@@ -14,8 +14,10 @@ use App\Services\Interfaces\SmsServiceInterface;
 use App\Services\Interfaces\SubscriptionServiceInterface;
 use App\Services\LocalGymPhotoService;
 use App\Services\SubscriptionService;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,6 +38,15 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Redirection des utilisateurs déjà connectés qui visitent /login
+        RedirectIfAuthenticated::redirectUsing(function () {
+            return match (Auth::user()->role) {
+                'admin', 'super_admin' => route('admin.dashboard'),
+                'gym_owner'            => route('gym.dashboard'),
+                default                => route('member.dashboard'),
+            };
+        });
+
         // Rate limiters nommés — utilisent le cache store (array en tests, Redis en prod)
         RateLimiter::for('api', fn(Request $request) =>
             Limit::perMinute(60)->by($request->user()?->id ?: $request->ip())

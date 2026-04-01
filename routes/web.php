@@ -11,6 +11,8 @@ use App\Http\Controllers\Web\Auth\RegisterController;
 use App\Http\Controllers\Web\Auth\TwoFactorController;
 use App\Http\Controllers\Web\Gym\GymCheckinController;
 use App\Http\Controllers\Web\Gym\GymDashboardController;
+use App\Http\Controllers\Web\Gym\GymProfileController;
+use App\Http\Controllers\Web\Gym\GymProgramOwnerController;
 use App\Http\Controllers\Web\Gym\GymScanController;
 use App\Http\Controllers\Web\Member\CheckinWebController;
 use App\Http\Controllers\Web\Member\DashboardController;
@@ -26,6 +28,9 @@ use Illuminate\Support\Facades\Route;
 // Landing page publique
 Route::get('/', LandingController::class)->name('home');
 
+// PWA
+Route::get('/offline', fn () => view('offline'))->name('offline');
+
 // SEO
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt',  [SeoController::class, 'robots'])->name('robots');
@@ -38,7 +43,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register',[RegisterController::class, 'store'])->name('register.store');
 });
 
-Route::match(['GET', 'POST'], '/logout', [LoginController::class, 'destroy'])
+Route::get('/logout', [LoginController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
 
@@ -67,6 +72,15 @@ Route::middleware(['auth', 'role:gym_owner'])
         Route::get('/scan',     fn() => view('gym.scan'))->name('scan');
         Route::post('/scan/validate', [GymScanController::class, 'validate'])->name('scan.validate');
         Route::get('/checkins', GymCheckinController::class)->name('checkins');
+
+        // Profil salle — modifications par le gym owner
+        Route::get('/profil',              [GymProfileController::class, 'edit'])->name('profil');
+        Route::put('/profil/infos',        [GymProfileController::class, 'updateInfo'])->name('profil.infos');
+        Route::put('/profil/horaires',     [GymProfileController::class, 'updateHours'])->name('profil.horaires');
+        Route::put('/profil/activites',    [GymProfileController::class, 'updateActivities'])->name('profil.activites');
+        Route::post('/profil/programmes',                   [GymProgramOwnerController::class, 'store'])->name('profil.programmes.store');
+        Route::put('/profil/programmes/{program}',          [GymProgramOwnerController::class, 'update'])->name('profil.programmes.update');
+        Route::delete('/profil/programmes/{program}',       [GymProgramOwnerController::class, 'destroy'])->name('profil.programmes.destroy');
     });
 
 // ── Dashboard admin (+ 2FA obligatoire) ────────────────
