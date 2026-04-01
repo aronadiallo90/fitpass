@@ -32,8 +32,8 @@
         </div>
     </div>
 @else
-<div class="card-static" style="padding: 0; overflow: hidden;">
-    <table class="data-table">
+<div class="card-static" style="padding: 0;">
+    <div class="table-responsive"><table class="data-table">
         <thead>
             <tr>
                 <th>Membre</th>
@@ -61,7 +61,7 @@
             </tr>
             @endforeach
         </tbody>
-    </table>
+    </table></div>
     @if($checkins->hasPages())
     <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--color-border);">
         {{ $checkins->links() }}

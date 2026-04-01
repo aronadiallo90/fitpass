@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Faire confiance aux proxies (tunnels dev : localtunnel, cloudflared, ngrok)
+        $middleware->trustProxies(at: '*');
+
         // Headers de sécurité sur toutes les requêtes
         $middleware->append(SecurityHeaders::class);
 

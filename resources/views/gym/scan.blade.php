@@ -29,21 +29,34 @@
 
     {{-- Zone de scan --}}
     <div x-show="!result" style="text-align: center;">
-        <div class="scan-frame" style="margin-bottom: 1.5rem;">
+
+        {{-- Bouton démarrage — nécessaire sur mobile (geste utilisateur requis) --}}
+        <div x-show="!cameraStarted && !cameraFailed" style="margin-bottom: 1.5rem;">
+            <button @click="startCamera()"
+                    class="btn-primary"
+                    style="width: 100%; padding: 1rem; font-size: 1rem;">
+                Activer la caméra
+            </button>
+            <p style="font-size: 0.7rem; color: var(--color-text-muted); margin-top: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">
+                Appuyez pour démarrer le scan
+            </p>
+        </div>
+
+        <div x-show="cameraStarted" class="scan-frame" style="margin-bottom: 1.5rem;">
             <video id="qr-video" autoplay playsinline></video>
             <div class="scan-line"></div>
         </div>
-        <p style="font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.1em;">
+        <p x-show="cameraStarted" style="font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.1em;">
             Placez le QR code dans le cadre
         </p>
         <div x-show="error" class="alert-error" style="margin-top: 1rem;" x-text="error"></div>
     </div>
 
-    @if(app()->isLocal())
-    {{-- Saisie manuelle du token QR — DEV uniquement (toujours visible) --}}
-    <div x-show="!result" style="margin-top: 2rem; padding: 1rem; border: 1px dashed var(--color-warning); border-radius: 0.5rem;">
+    {{-- Saisie manuelle : toujours visible si caméra indisponible, sinon DEV uniquement --}}
+    <div x-show="!result && (cameraFailed{{ app()->isLocal() ? ' || true' : '' }})"
+         style="margin-top: 2rem; padding: 1rem; border: 1px dashed var(--color-warning); border-radius: 0.5rem;">
         <p style="font-size: 0.7rem; color: var(--color-warning); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
-            ⚠ Mode DEV — Saisie manuelle
+            {{ app()->isLocal() ? '⚠ Mode DEV — Saisie manuelle' : 'Saisie manuelle du QR code' }}
         </p>
         <input type="text"
                x-model="manualToken"
@@ -55,10 +68,10 @@
             Valider manuellement
         </button>
     </div>
-    @endif
 
     {{-- Résultat valide --}}
     <div class="scan-result scan-result-valid"
+         x-cloak
          x-show="result === 'valid'"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
@@ -75,6 +88,7 @@
 
     {{-- Résultat invalide --}}
     <div class="scan-result scan-result-invalid"
+         x-cloak
          x-show="result === 'invalid'"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
@@ -102,27 +116,47 @@ function qrScanner() {
         failureReason: '',
         gymName: '',
         error: null,
+        cameraFailed: false,
+        cameraStarted: false,
         scanning: false,
         videoEl: null,
         canvasEl: null,
         animFrameId: null,
         manualToken: '',
 
-        async init() {
-            this.videoEl = document.getElementById('qr-video');
+        init() {
             this.canvasEl = document.createElement('canvas');
-            await this.startCamera();
         },
 
         async startCamera() {
+            if (!window.isSecureContext && location.hostname !== 'localhost') {
+                this.error = 'La caméra nécessite HTTPS. Utilisez la saisie manuelle ci-dessous.';
+                this.cameraFailed = true;
+                return;
+            }
+
+            if (!navigator.mediaDevices?.getUserMedia) {
+                this.error = 'Caméra non supportée par ce navigateur. Utilisez la saisie manuelle.';
+                this.cameraFailed = true;
+                return;
+            }
+
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: 'environment' }
                 });
+                this.cameraStarted = true;
+                await this.$nextTick();
+                this.videoEl = document.getElementById('qr-video');
                 this.videoEl.srcObject = stream;
                 this.videoEl.addEventListener('loadedmetadata', () => this.scan());
             } catch (e) {
-                this.error = 'Accès caméra refusé. Autorisez la caméra dans les paramètres.';
+                if (e.name === 'NotAllowedError') {
+                    this.error = 'Permission caméra refusée. Autorisez dans les paramètres du navigateur.';
+                } else {
+                    this.error = 'Caméra inaccessible (' + e.name + '). Utilisez la saisie manuelle.';
+                }
+                this.cameraFailed = true;
             }
         },
 

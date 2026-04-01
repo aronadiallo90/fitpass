@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Cache les éléments Alpine avant initialisation */
+[x-cloak] { display: none !important; }
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -348,6 +351,9 @@
         overflow: hidden;
         border: 1px solid var(--color-border);
         background-color: var(--color-bg-soft);
+        position: relative;
+        z-index: 1;
+        isolation: isolate;
     }
     @media (min-width: 768px) {
         .map-container { height: 500px; }
@@ -457,6 +463,198 @@
     .kpi-trend-up   { color: var(--color-success); }
     .kpi-trend-down { color: var(--color-danger); }
 }
+
+    /* ── Responsive : table scroll ─────────────────── */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Hamburger button ───────────────────────────── */
+    .hamburger-btn {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 2.5rem;
+        height: 2.5rem;
+        cursor: pointer;
+        background: transparent;
+        border: 1px solid var(--color-border);
+        border-radius: 0.375rem;
+        padding: 0.375rem;
+        flex-shrink: 0;
+    }
+    .hamburger-btn span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background-color: var(--color-text);
+        border-radius: 2px;
+        transition: all 0.25s ease-out;
+        transform-origin: center;
+    }
+    .hamburger-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Overlay backdrop ───────────────────────────── */
+    .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.75);
+        z-index: 40;
+        backdrop-filter: blur(2px);
+    }
+
+    /* ── Mobile drawer (slide from left) ────────────── */
+    .mobile-drawer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(280px, 85vw);
+        background-color: var(--color-bg-soft);
+        border-right: 1px solid var(--color-border);
+        z-index: 50;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .mobile-drawer.open { transform: translateX(0); }
+
+    .drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid var(--color-border);
+        flex-shrink: 0;
+    }
+    .drawer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 1rem;
+        flex: 1;
+    }
+    .drawer-footer {
+        padding: 1rem;
+        border-top: 1px solid var(--color-border);
+        flex-shrink: 0;
+    }
+    .drawer-user {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.75rem;
+    }
+
+    /* ── Admin layout ───────────────────────────────── */
+    .admin-wrapper {
+        display: flex;
+        min-height: 100vh;
+    }
+    .admin-sidebar {
+        width: 240px;
+        min-height: 100vh;
+        background-color: var(--color-bg-soft);
+        border-right: 1px solid var(--color-border);
+        flex-shrink: 0;
+        padding: 1.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    .admin-main {
+        flex: 1;
+        overflow: auto;
+        min-width: 0;
+    }
+    .admin-topbar {
+        background-color: var(--color-bg-soft);
+        border-bottom: 1px solid var(--color-border);
+        padding: 0.875rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .admin-topbar-title {
+        font-family: var(--font-heading);
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ── Bottom navigation (membre mobile) ──────────── */
+    .bottom-nav {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--color-bg-soft);
+        border-top: 1px solid var(--color-border);
+        z-index: 30;
+        padding: 0.375rem 0;
+        padding-bottom: max(0.375rem, env(safe-area-inset-bottom));
+    }
+    .bottom-nav-inner {
+        display: flex;
+        align-items: stretch;
+    }
+    .bottom-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.2rem;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--color-text-muted);
+        text-decoration: none;
+        padding: 0.375rem 0.25rem;
+        flex: 1;
+        transition: color 0.2s;
+        min-height: 48px;
+    }
+    .bottom-nav-item.active { color: var(--color-primary); }
+    .bottom-nav-item svg { width: 22px; height: 22px; stroke-width: 1.75; }
+
+    /* ── Media queries ──────────────────────────────── */
+    @media (max-width: 1023px) {
+        .hamburger-btn { display: flex; }
+        .admin-sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 50;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 0;
+        }
+        .admin-sidebar.open { transform: translateX(0); }
+        .admin-wrapper { display: block; }
+        .admin-main { min-height: 100vh; }
+    }
+
+    @media (max-width: 767px) {
+        .desktop-nav-links { display: none !important; }
+        .bottom-nav { display: flex; }
+        .main-with-bottom-nav { padding-bottom: 5rem !important; }
+        .admin-topbar { padding: 0.75rem 1rem; }
+    }
 
 /* ─── Utilitaires ───────────────────────────────────── */
 @layer utilities {

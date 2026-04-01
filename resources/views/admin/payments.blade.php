@@ -46,6 +46,7 @@
             <p class="empty-state-text">Aucun paiement trouvé</p>
         </div>
     @else
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
     <table class="data-table">
         <thead>
             <tr>
@@ -80,6 +81,7 @@
             @endforeach
         </tbody>
     </table>
+    </div>
     <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--color-border);">
         {{ $payments->withQueryString()->links() }}
     </div>

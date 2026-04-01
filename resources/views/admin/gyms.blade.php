@@ -27,6 +27,7 @@
             <a href="{{ route('admin.gyms.create') }}" class="btn-primary" style="margin-top: 1rem;">Ajouter la première salle</a>
         </div>
     @else
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
     <table class="data-table">
         <thead>
             <tr>
@@ -72,6 +73,7 @@
             @endforeach
         </tbody>
     </table>
+    </div>
     @endif
 </div>
 

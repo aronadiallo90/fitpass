@@ -35,7 +35,7 @@
 <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
 
     {{-- Derniers paiements --}}
-    <div class="card-static" style="padding: 0; overflow: hidden;">
+    <div class="card-static" style="padding: 0;">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
             <span class="kpi-label">Derniers paiements</span>
             <a href="{{ route('admin.payments') }}" style="font-size: 0.75rem; color: var(--color-primary); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em;">Tout voir →</a>
@@ -43,7 +43,7 @@
         @if($recentPayments->isEmpty())
             <div class="empty-state"><p class="empty-state-text">Aucun paiement</p></div>
         @else
-        <table class="data-table">
+        <div class="table-responsive"><table class="data-table">
             <thead>
                 <tr>
                     <th>Membre</th>
@@ -64,12 +64,12 @@
                 </tr>
                 @endforeach
             </tbody>
-        </table>
+        </table></div>
         @endif
     </div>
 
     {{-- Derniers membres --}}
-    <div class="card-static" style="padding: 0; overflow: hidden;">
+    <div class="card-static" style="padding: 0;">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
             <span class="kpi-label">Derniers membres inscrits</span>
             <a href="{{ route('admin.members') }}" style="font-size: 0.75rem; color: var(--color-primary); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em;">Tout voir →</a>
@@ -77,7 +77,7 @@
         @if($recentMembers->isEmpty())
             <div class="empty-state"><p class="empty-state-text">Aucun membre</p></div>
         @else
-        <table class="data-table">
+        <div class="table-responsive"><table class="data-table">
             <thead>
                 <tr>
                     <th>Nom</th>
@@ -102,7 +102,7 @@
                 </tr>
                 @endforeach
             </tbody>
-        </table>
+        </table></div>
         @endif
     </div>
 

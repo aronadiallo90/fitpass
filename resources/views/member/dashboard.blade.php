@@ -97,7 +97,7 @@
     </a>
 
     {{-- Dernières entrées --}}
-    <div class="card-static" style="padding: 0; overflow: hidden;">
+    <div class="card-static" style="padding: 0;">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border);">
             <span class="kpi-label">Dernières entrées</span>
         </div>
@@ -107,7 +107,7 @@
                 <p class="empty-state-text">Aucune entrée enregistrée</p>
             </div>
         @else
-        <table class="data-table">
+        <div class="table-responsive"><table class="data-table">
             <thead>
                 <tr>
                     <th>Salle</th>
@@ -126,7 +126,7 @@
                 </tr>
                 @endforeach
             </tbody>
-        </table>
+        </table></div>
         <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--color-border);">
             <a href="{{ route('member.checkins') }}" style="font-size: 0.75rem; color: var(--color-primary); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em;">Voir tout l'historique →</a>
         </div>

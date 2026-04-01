@@ -1,6 +1,6 @@
 # BACKLOG — FitPass Dakar
-Généré le : 2026-03-29 | Mis à jour : 2026-03-30
-Sprint actuel : 6A — Recherche salles enrichie
+Généré le : 2026-03-29 | Mis à jour : 2026-03-31
+Sprint actuel : 6B — PWA Installable
 Stack : Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
 
 ## État des sprints
@@ -12,7 +12,145 @@ Stack : Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
 | Sprint 3 — Interfaces | ✅ Terminé | `f484be4` (102 tests) |
 | Sprint 4 — Marketing | ✅ Terminé | `041bc9a` (118 tests) |
 | Sprint 5 — Livraison | ✅ Terminé | `99d2030` (118 tests) |
-| Sprint 6A — Recherche salles enrichie | 🔄 En cours | — |
+| Sprint 6A — Recherche salles enrichie | ✅ Terminé | `d5f8a62` (157 tests) |
+| Sprint 6B — PWA Installable | 🔄 En cours | — |
+
+---
+
+## SPRINT 6B — PWA Installable (semaine 10)
+
+### Contexte
+FitPass est une app mobile-first utilisée sur smartphone à Dakar. La transformer
+en PWA installable permet aux membres d'avoir une icône sur leur écran d'accueil,
+une expérience plein écran sans barre navigateur, et un accès offline aux pages
+déjà visitées — sans passer par le Play Store ou l'App Store.
+
+### Objectif final
+```
+Android Chrome : bannière "Ajouter à l'écran d'accueil" → icône FitPass → plein écran
+iPhone Safari  : Partager → "Sur l'écran d'accueil"   → icône FitPass → plein écran
+```
+
+### Périmètre technique
+| Composant | Description |
+|-----------|-------------|
+| `public/manifest.json` | Identité PWA : nom, icônes, couleurs, display standalone |
+| `public/sw.js` | Service Worker : cache app shell + network-first pour les pages |
+| `public/icons/` | Icônes PNG : 192×192, 512×512, 180×180 (apple-touch-icon) |
+| Layouts Blade | 3 fichiers : `app.blade.php`, `gym.blade.php`, `admin.blade.php` |
+| `resources/js/app.js` | Enregistrement du Service Worker au démarrage |
+
+### Stratégie cache Service Worker
+```
+Cache-first  → assets Vite (CSS, JS, fonts Google) — jamais modifiés sans hash
+Network-first → pages Laravel (dashboard, gyms, scan) — données toujours fraîches
+Cache fallback → page /offline.blade.php si réseau absent ET page non en cache
+```
+
+---
+
+### Tâches séquentielles (ordre obligatoire)
+
+| ID | User Story | Agent | Estim. | Dépend de |
+|----|-----------|-------|--------|-----------|
+| S6B-T1 | Icônes FitPass PWA + manifest.json | DEV | S | — |
+| S6B-T2 | Service Worker sw.js (cache-first assets + network-first pages + page offline) | DEV | M | S6B-T1 |
+| S6B-T3 | Meta tags PWA dans les 3 layouts Blade + enregistrement SW dans app.js | DEV | S | S6B-T1, S6B-T2 |
+| S6B-T4 | QA : Lighthouse PWA score + test Android Chrome + test iPhone Safari | QA | S | S6B-T3 |
+
+---
+
+### Détail des user stories
+
+**S6B-T1 — Icônes + manifest.json**
+```
+En tant que membre, je veux que FitPass ait une vraie identité visuelle
+quand je l'installe sur mon écran d'accueil.
+
+Critères d'acceptation :
+- [ ] public/manifest.json valide (name, short_name, start_url, display, theme_color, background_color, icons)
+- [ ] name: "FitPass Dakar" / short_name: "FitPass"
+- [ ] theme_color: "#FF3B3B" (rouge FitPass)
+- [ ] background_color: "#0A0A0F" (fond sombre FitPass)
+- [ ] display: "standalone" (plein écran, sans barre navigateur)
+- [ ] start_url: "/dashboard" (atterrit sur le dashboard après installation)
+- [ ] 3 icônes : 192×192 PNG, 512×512 PNG, 180×180 PNG (apple-touch-icon)
+- [ ] Icônes dans public/icons/ — logo FitPass rouge sur fond sombre
+- [ ] purpose: "any maskable" sur les icônes 192 et 512
+
+Estimation : S (<2h)
+Agent : DEV
+```
+
+**S6B-T2 — Service Worker**
+```
+En tant que membre, je veux que l'app fonctionne même avec un réseau lent
+ou intermittent (fréquent au Sénégal).
+
+Critères d'acceptation :
+- [ ] public/sw.js à la racine (portée maximale /)
+- [ ] Stratégie CACHE-FIRST pour :
+      → Assets Vite hashés (*.css, *.js dans /build/)
+      → Fonts Google (fonts.googleapis.com, fonts.gstatic.com)
+- [ ] Stratégie NETWORK-FIRST pour :
+      → Pages Laravel (/, /dashboard, /dashboard/gyms, /dashboard/scan, etc.)
+      → Fallback sur cache si réseau absent
+- [ ] Page /offline servie si réseau absent ET page non en cache
+- [ ] Cache nommé avec version : "fitpass-v1-assets", "fitpass-v1-pages"
+- [ ] Activation immédiate : skipWaiting() + clients.claim()
+
+Estimation : M (2-4h)
+Agent : DEV
+```
+
+**S6B-T3 — Intégration Blade + enregistrement SW**
+```
+En tant que DEV, je veux que les 3 layouts détectent et enregistrent
+la PWA automatiquement au chargement.
+
+Critères d'acceptation :
+- [ ] <link rel="manifest" href="/manifest.json"> dans les 3 layouts
+- [ ] <meta name="theme-color" content="#FF3B3B"> dans les 3 layouts
+- [ ] <meta name="apple-mobile-web-app-capable" content="yes"> — iPhone
+- [ ] <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> — iPhone
+- [ ] <link rel="apple-touch-icon" href="/icons/icon-180.png"> — iPhone
+- [ ] Enregistrement SW dans resources/js/app.js avec détection support
+- [ ] Page /offline.blade.php avec message adapté (layout minimal, sans dépendance réseau)
+- [ ] Route GET /offline dans routes/web.php (accessible sans auth)
+
+Estimation : S (<2h)
+Agent : DEV
+```
+
+**S6B-T4 — QA + Lighthouse**
+```
+En tant que QA, je veux valider que la PWA atteint le score Lighthouse requis
+sur mobile et est installable sur les deux OS cibles.
+
+Critères d'acceptation :
+- [ ] Lighthouse PWA score ≥ 90 (Chrome DevTools → Lighthouse → Mobile)
+- [ ] Android Chrome : bannière d'installation apparaît après 2 visites
+- [ ] Android : app installée lance en standalone (pas de barre URL)
+- [ ] Android : icône FitPass visible sur l'écran d'accueil
+- [ ] iPhone Safari : "Partager → Sur l'écran d'accueil" fonctionne
+- [ ] iPhone : icône FitPass correcte (apple-touch-icon)
+- [ ] Hors ligne : page /offline affichée si réseau coupé et page non cachée
+- [ ] Assets Vite en cache : rechargement sans réseau fonctionne
+
+Estimation : S (<2h)
+Agent : QA
+```
+
+---
+
+### Definition of Done Sprint 6B
+- [ ] `php artisan test` → 157/157 (aucune régression)
+- [ ] manifest.json valide (outil : web.dev/measure ou Chrome DevTools)
+- [ ] Lighthouse PWA score ≥ 90 sur mobile
+- [ ] Installable sur Android Chrome ET iPhone Safari
+- [ ] Page /offline opérationnelle hors réseau
+- [ ] Commit `feat(pwa): PWA installable FitPass` sur `develop`
+- [ ] PR `develop → main` créée et CI verte
 
 ---
 
