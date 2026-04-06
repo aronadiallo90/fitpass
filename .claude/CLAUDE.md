@@ -17,38 +17,73 @@
 7. ROADMAP.md                 → Timeline globale, sprints terminés, décisions ouvertes
 ```
 
-**Après avoir lu ces 6 fichiers, résumer en 3 lignes :**
-- Sprint courant + ce qui reste
-- Dernier agent actif + prochaine tâche
-- Bloquants éventuels
+**Après avoir lu ces fichiers, spawner l'agent PM pour résumer la situation :**
+```
+Agent PM → lit sprint-state + BACKLOG → résume en 3 lignes + identifie prochaine tâche
+```
 
 ---
 
 ## ⚠️ RÈGLES ABSOLUES — s'appliquent en permanence, même après /compact
 
-### Chainage agents — OBLIGATOIRE, aucune exception
+### Chainage agents réels — OBLIGATOIRE, aucune exception
 
-Avant chaque tâche, annoncer le rôle actif : **[AGENT: NOM]**
-Lire agents.md AVANT de commencer. Respecter le workflow du sprint en cours.
+**Les agents sont définis dans `.claude/agents/` et DOIVENT être utilisés via l'outil Agent.**
+Jamais de travail direct sans passer par l'agent approprié.
 
-**Sprint 2 (Core Métier) — séquence exacte :**
-1. **[AGENT: DEV]** → invoquer `/architecture` avant tout nouveau module
-2. **[AGENT: DEV]** → coder Services + API + Resources + Form Requests
-3. **[AGENT: DEV]** → invoquer `/code-review` avant chaque merge
-4. **[AGENT: QA]** → écrire unit tests (Services) + feature tests (API)
-5. **[AGENT: QA]** → `php artisan test` → 100% avant commit
+#### Flux standard pour toute tâche
 
-**Sprint 3 (Interfaces) — séquence exacte :**
-1. **[AGENT: DESIGNER]** → invoquer `/design-system` (vérifier cohérence)
-2. **[AGENT: DESIGNER]** → créer dashboards (member, gym_owner, admin)
-3. **[AGENT: DESIGNER]** → invoquer `/design-handoff` après chaque page
-4. **[AGENT: DESIGNER]** → invoquer `/accessibility-review` avant livraison
-5. **[AGENT: DEV]** → intégrations API externes (PayTech, Twilio)
-6. **[AGENT: QA]** → tests intégration + recette mobile
+```
+Utilisateur → PM (orchestrateur)
+              ↓
+              PM spawne DEV pour le code
+              ↓
+              DEV passe HANDOFF → QA
+              ↓
+              QA valide → HANDOFF → PM
+              ↓
+              PM met à jour BACKLOG + commit docs
+```
 
-Un agent NE FAIT PAS le travail d'un autre agent.
-Le DEV ne rédige pas les tests — c'est le QA.
-Le DESIGNER ne code pas la logique — c'est le DEV.
+#### Flux feature avec vues Blade
+
+```
+PM → DESIGNER (vues Blade) → HANDOFF → DEV (logique) → HANDOFF → QA → HANDOFF → PM
+```
+
+#### Flux sprint sécurité/déploiement
+
+```
+PM → SECURITY (audit) → HANDOFF → CICD (pipeline) → HANDOFF → PM
+```
+
+#### Agents disponibles (`.claude/agents/`)
+
+| Fichier | Rôle | Quand spawner |
+|---------|------|---------------|
+| `pm.md` | Orchestrateur | Début de toute session, fin de sprint, planning |
+| `dev.md` | Code Laravel | Feature, migration, Service, Controller, bug fix |
+| `qa.md` | Tests PHPUnit | Après chaque livraison DEV |
+| `designer.md` | Vues Blade + CSS | Dashboard, composant, page |
+| `security.md` | Audit sécurité | Avant déploiement, audit OWASP |
+| `cicd.md` | Pipeline CI/CD | Déploiement, GitHub Actions |
+| `marketing.md` | Contenu + SEO | Landing page, campagne, copy |
+
+#### Règle de séparation stricte
+- DEV ne rédige PAS les tests → QA
+- DESIGNER ne code PAS la logique → DEV
+- QA ne code PAS les features → DEV
+- PM ne code PAS → il orchestre uniquement
+
+#### Format HANDOFF obligatoire entre agents
+```
+--- HANDOFF [SOURCE → CIBLE] ---
+Sprint    : [N — nom]
+Complété  : [liste des fichiers livrés]
+Tests     : [résultat php artisan test ou "à faire par QA"]
+À noter   : [pièges, cas limites, points d'attention]
+Prêt pour : [agent cible + tâche exacte]
+```
 
 ---
 
