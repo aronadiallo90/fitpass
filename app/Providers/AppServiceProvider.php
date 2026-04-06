@@ -13,6 +13,8 @@ use App\Services\Interfaces\PaymentServiceInterface;
 use App\Services\Interfaces\SmsServiceInterface;
 use App\Services\Interfaces\SubscriptionServiceInterface;
 use App\Services\LocalGymPhotoService;
+use App\Services\ProfilePhotoService;
+use App\Services\Interfaces\ProfilePhotoServiceInterface;
 use App\Services\SubscriptionService;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         // Photos : LocalGymPhotoService par défaut — Cloudinary en prod via CLOUDINARY_URL
         $this->app->bind(GymPhotoServiceInterface::class, LocalGymPhotoService::class);
         $this->app->bind(GymSearchServiceInterface::class, GymSearchService::class);
+        $this->app->bind(ProfilePhotoServiceInterface::class, ProfilePhotoService::class);
     }
 
     public function boot(): void
@@ -62,6 +65,10 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('checkins', fn(Request $request) =>
             Limit::perMinute(60)->by($request->ip())
+        );
+
+        RateLimiter::for('photo-upload', fn(Request $request) =>
+            Limit::perMinute(10)->by($request->user()?->id ?: $request->ip())
         );
     }
 }

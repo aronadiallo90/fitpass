@@ -23,10 +23,14 @@ class GymScanController extends Controller
 
         $checkin = $this->checkinService->validate($request->qr_token, $gym);
 
+        $member = $checkin->user;
+
         return response()->json([
             'data'    => [
                 'status'      => $checkin->status,
-                'member_name' => $checkin->user?->name,
+                'member_name' => $member?->name,
+                'member_initials' => $member?->initials,
+                'photo_url'   => $member?->profile_photo_url ?? '',
                 'gym_name'    => $gym->name,
             ],
             'success' => $checkin->isValid(),
