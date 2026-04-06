@@ -10,6 +10,122 @@
     @endif
 </div>
 
+{{-- Photo de profil --}}
+<div class="card" style="margin-bottom: 1.5rem;"
+     x-data="{
+        photoUrl: '{{ auth()->user()->profile_photo_url }}',
+        initials: '{{ auth()->user()->initials }}',
+        uploading: false,
+        deleting: false,
+        error: '',
+
+        async upload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            this.uploading = true;
+            this.error = '';
+            const form = new FormData();
+            form.append('photo', file);
+            form.append('_token', document.querySelector('meta[name=csrf-token]').content);
+            try {
+                const res = await fetch('{{ route('member.profile.photo.store') }}', { method: 'POST', body: form });
+                const json = await res.json();
+                if (!res.ok) { this.error = json.message || 'Erreur lors du téléversement.'; }
+                else { this.photoUrl = json.photo_url; }
+            } catch { this.error = 'Erreur réseau.'; }
+            finally { this.uploading = false; event.target.value = ''; }
+        },
+
+        async remove() {
+            if (!confirm('Supprimer votre photo de profil ?')) return;
+            this.deleting = true;
+            this.error = '';
+            try {
+                const res = await fetch('{{ route('member.profile.photo.destroy') }}', {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                    }
+                });
+                const json = await res.json();
+                if (!res.ok) { this.error = json.message || 'Erreur lors de la suppression.'; }
+                else { this.photoUrl = ''; }
+            } catch { this.error = 'Erreur réseau.'; }
+            finally { this.deleting = false; }
+        }
+     }">
+
+    <div style="display: flex; align-items: center; gap: 1.25rem;">
+
+        {{-- Avatar --}}
+        <div style="position: relative; flex-shrink: 0;">
+            <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden;
+                        border: 2px solid var(--color-primary); background: var(--color-bg-soft);">
+                <template x-if="photoUrl">
+                    <img :src="photoUrl" alt="Photo de profil"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </template>
+                <template x-if="!photoUrl">
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center;
+                                justify-content: center; font-family: var(--font-heading);
+                                font-size: 1.5rem; font-weight: 700; color: var(--color-primary);"
+                         x-text="initials"></div>
+                </template>
+            </div>
+            {{-- Indicateur chargement --}}
+            <div x-show="uploading || deleting"
+                 style="position: absolute; inset: 0; border-radius: 50%;
+                        background: rgba(10,10,15,0.7); display: flex;
+                        align-items: center; justify-content: center;">
+                <svg style="width:20px; height:20px; color: var(--color-primary); animation: spin 1s linear infinite;"
+                     fill="none" viewBox="0 0 24 24">
+                    <circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                </svg>
+            </div>
+        </div>
+
+        {{-- Nom + actions --}}
+        <div style="flex: 1; min-width: 0;">
+            <div style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700;
+                        text-transform: uppercase; letter-spacing: 0.04em; color: #fff;
+                        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ auth()->user()->name }}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+                {{ auth()->user()->email }}
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <label style="cursor: pointer; font-size: 0.75rem; text-transform: uppercase;
+                              letter-spacing: 0.08em; color: var(--color-primary);
+                              border: 1px solid rgba(255,59,59,0.4); border-radius: 6px;
+                              padding: 0.35rem 0.75rem; transition: border-color 0.2s;"
+                       :style="(uploading || deleting) ? 'opacity:.4; pointer-events:none' : ''"
+                       onmouseover="this.style.borderColor='rgba(255,59,59,0.8)'"
+                       onmouseout="this.style.borderColor='rgba(255,59,59,0.4)'">
+                    <input type="file" accept="image/jpeg,image/png,image/webp"
+                           style="display: none;" @change="upload($event)">
+                    <span x-text="uploading ? 'Envoi...' : (photoUrl ? 'Changer ma photo' : 'Ajouter une photo')"></span>
+                </label>
+                <button x-show="photoUrl" @click="remove()"
+                        :disabled="uploading || deleting"
+                        style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
+                               color: var(--color-text-muted); background: none; border: 1px solid var(--color-border);
+                               border-radius: 6px; padding: 0.35rem 0.75rem; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.color='var(--color-danger)'; this.style.borderColor='rgba(239,68,68,0.5)'"
+                        onmouseout="this.style.color='var(--color-text-muted)'; this.style.borderColor='var(--color-border)'">
+                    <span x-text="deleting ? 'Suppression...' : 'Supprimer'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Message d'erreur --}}
+    <div x-show="error" x-text="error"
+         style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--color-danger);"></div>
+
+</div>
+
 {{-- Alerte expiration imminente --}}
 @if($activeSubscription && $activeSubscription->expires_at->diffInDays(now()) <= 7)
     <div class="alert-warning" style="margin-bottom: 1.5rem;">
