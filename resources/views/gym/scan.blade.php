@@ -76,6 +76,24 @@
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100">
+
+        {{-- Photo membre — vérification visuelle --}}
+        <div style="margin-bottom: 1rem;">
+            <template x-if="photoUrl">
+                <img :src="photoUrl" :alt="memberName"
+                     style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+                            border: 3px solid #22C55E; margin: 0 auto; display: block;">
+            </template>
+            <template x-if="!photoUrl">
+                <div style="width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2);
+                            display: flex; align-items: center; justify-content: center;
+                            font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700;
+                            color: white; margin: 0 auto; border: 3px solid #22C55E;"
+                     x-text="memberInitials">
+                </div>
+            </template>
+        </div>
+
         <div class="scan-result-icon">✓</div>
         <div class="scan-result-name" x-text="memberName"></div>
         <div class="scan-result-status">Entrée validée</div>
@@ -93,8 +111,16 @@
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100">
+
+        {{-- Photo membre même en cas de refus (aide à identifier la personne) --}}
+        <template x-if="photoUrl">
+            <img :src="photoUrl" :alt="memberName"
+                 style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+                        border: 3px solid #EF4444; margin: 0 auto 0.75rem; display: block; opacity: 0.8;">
+        </template>
+
         <div class="scan-result-icon">✗</div>
-        <div class="scan-result-name">Accès refusé</div>
+        <div class="scan-result-name" x-text="memberName || 'Accès refusé'"></div>
         <div class="scan-result-status" x-text="failureReason"></div>
         <button class="btn-outline" @click="reset()"
                 style="border-color: white; color: white; margin-top: 1.5rem;">
@@ -113,6 +139,8 @@ function qrScanner() {
     return {
         result: null,
         memberName: '',
+        memberInitials: '',
+        photoUrl: '',
         failureReason: '',
         gymName: '',
         error: null,
@@ -186,10 +214,13 @@ function qrScanner() {
                     body: JSON.stringify({ qr_token: qrToken }),
                 });
                 const data = await res.json();
+                this.memberName     = data.data?.member_name ?? '';
+                this.memberInitials = data.data?.member_initials ?? '?';
+                this.photoUrl       = data.data?.photo_url ?? '';
+                this.gymName        = data.data?.gym_name ?? '';
+
                 if (res.ok && data.data?.status === 'valid') {
-                    this.result      = 'valid';
-                    this.memberName  = data.data.member_name ?? 'Membre';
-                    this.gymName     = data.data.gym_name ?? '';
+                    this.result = 'valid';
                 } else {
                     this.result        = 'invalid';
                     this.failureReason = data.message ?? 'QR code invalide';
@@ -204,10 +235,12 @@ function qrScanner() {
         },
 
         reset() {
-            this.result        = null;
-            this.memberName    = '';
-            this.failureReason = '';
-            this.animFrameId   = requestAnimationFrame(() => this.scan());
+            this.result         = null;
+            this.memberName     = '';
+            this.memberInitials = '';
+            this.photoUrl       = '';
+            this.failureReason  = '';
+            this.animFrameId    = requestAnimationFrame(() => this.scan());
         },
     };
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -24,10 +25,13 @@ class User extends Authenticatable
         'role',
         'qr_token',
         'is_active',
+        'profile_photo_path',
         'two_factor_secret',
         'two_factor_recovery_codes',
         'two_factor_confirmed_at',
     ];
+
+    protected $appends = ['profile_photo_url', 'initials'];
 
     protected $hidden = [
         'password',
@@ -53,6 +57,27 @@ class User extends Authenticatable
             // HasUuids gère $user->id automatiquement
             $user->qr_token = (string) Str::uuid();
         });
+    }
+
+    // Accessors photo profil
+    public function getProfilePhotoUrlAttribute(): string
+    {
+        if ($this->profile_photo_path) {
+            return Storage::url($this->profile_photo_path);
+        }
+
+        // Avatar initiales — pas de photo = URL générée côté front (composant Blade)
+        return '';
+    }
+
+    public function getInitialsAttribute(): string
+    {
+        $words = explode(' ', trim($this->name));
+        $initials = '';
+        foreach (array_slice($words, 0, 2) as $word) {
+            $initials .= mb_strtoupper(mb_substr($word, 0, 1));
+        }
+        return $initials ?: '?';
     }
 
     // Relations

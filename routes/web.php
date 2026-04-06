@@ -19,6 +19,7 @@ use App\Http\Controllers\Web\Member\DashboardController;
 use App\Http\Controllers\Web\Member\GymDirectoryController;
 use App\Http\Controllers\Web\Member\MapController;
 use App\Http\Controllers\Web\Member\PaymentWebController;
+use App\Http\Controllers\Web\Member\ProfilePhotoController;
 use App\Http\Controllers\Web\Member\QrCodeController;
 use App\Http\Controllers\Web\Member\SubscriptionWebController;
 use App\Http\Controllers\Web\LandingController;
@@ -61,6 +62,12 @@ Route::middleware(['auth', 'role:member'])
         Route::get('/map',           MapController::class)->name('map');
         Route::get('/gyms',          [GymDirectoryController::class, 'index'])->name('gyms');
         Route::get('/gyms/{slug}',   [GymDirectoryController::class, 'show'])->name('gyms.show');
+        // Photo de profil
+        Route::post('/profile/photo',   [ProfilePhotoController::class, 'store'])
+            ->middleware('throttle:photo-upload')
+            ->name('profile.photo.store');
+        Route::delete('/profile/photo', [ProfilePhotoController::class, 'destroy'])
+            ->name('profile.photo.destroy');
     });
 
 // ── Dashboard gym owner ─────────────────────────────────
