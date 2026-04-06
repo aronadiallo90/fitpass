@@ -1,6 +1,6 @@
 # BACKLOG — FitPass Dakar
 Généré le : 2026-03-29 | Mis à jour : 2026-03-31
-Sprint actuel : 6B — PWA Installable
+Sprint actuel : V2.2 — À définir
 Stack : Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
 
 ## État des sprints
@@ -13,7 +13,28 @@ Stack : Laravel 13 + MySQL 8 + Redis + Blade + Tailwind CSS v4 + Alpine.js
 | Sprint 4 — Marketing | ✅ Terminé | `041bc9a` (118 tests) |
 | Sprint 5 — Livraison | ✅ Terminé | `99d2030` (118 tests) |
 | Sprint 6A — Recherche salles enrichie | ✅ Terminé | `d5f8a62` (157 tests) |
-| Sprint 6B — PWA Installable | 🔄 En cours | — |
+| Sprint 6B — PWA Installable | ✅ Terminé | `0019a81` |
+| V2.1 — Anti-partage QR + Photo profil | ✅ Terminé | `79e42fe` (163 tests) |
+
+---
+
+## V2.1 — Anti-partage QR + Photo profil ✅ (commit `79e42fe`, 163 tests)
+
+### Tâches
+
+| ID | Tâche | Agent | Statut |
+|----|-------|-------|--------|
+| V2.1-T7 | Anti-partage QR : photo membre affichée au scan + composant Avatar | DEV | ✅ |
+| V2.1-T8 | UI upload/suppression photo profil — dashboard membre Alpine.js | DEV | ✅ |
+
+### Definition of Done V2.1
+- [x] `php artisan test` → 163/163 passants
+- [x] Photo membre visible au scan QR (gym_owner)
+- [x] Upload photo async sans rechargement de page (Alpine.js + fetch)
+- [x] Suppression photo avec confirmation
+- [x] Spinner pendant upload/suppression
+- [x] Fallback initiales si pas de photo
+- [x] Commit `feat(v2.1-t8)` sur `develop`
 
 ---
 
