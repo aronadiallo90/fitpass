@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Services\CheckinService;
 use App\Services\FakePaymentService;
 use App\Services\FakeSmsService;
+use App\Services\WatiNotificationService;
 use App\Services\Interfaces\CheckinServiceInterface;
 use App\Services\GymSearchService;
 use App\Services\Interfaces\GymPhotoServiceInterface;
@@ -15,6 +16,8 @@ use App\Services\Interfaces\SubscriptionServiceInterface;
 use App\Services\LocalGymPhotoService;
 use App\Services\ProfilePhotoService;
 use App\Services\Interfaces\ProfilePhotoServiceInterface;
+use App\Services\QrRegenerationService;
+use App\Services\Interfaces\QrRegenerationServiceInterface;
 use App\Services\SubscriptionService;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -28,15 +31,24 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Bindings Services ↔ Interfaces
-        // FakePaymentService et FakeSmsService actifs jusqu'à réception des clés API
+        // FakePaymentService actif jusqu'à réception des clés PayTech
         $this->app->bind(SubscriptionServiceInterface::class, SubscriptionService::class);
         $this->app->bind(PaymentServiceInterface::class, FakePaymentService::class);
         $this->app->bind(CheckinServiceInterface::class, CheckinService::class);
-        $this->app->bind(SmsServiceInterface::class, FakeSmsService::class);
+
+        // Binding conditionnel SMS/WhatsApp via NOTIFICATION_CHANNEL
+        // Valeurs : 'fake' (défaut), 'wati' (WhatsApp WATI), 'twilio' (SMS Twilio)
+        $notificationChannel = config('services.notification_channel', 'fake');
+        $this->app->bind(SmsServiceInterface::class, match ($notificationChannel) {
+            'wati'   => WatiNotificationService::class,
+            'twilio' => \App\Services\TwilioSmsService::class,
+            default  => FakeSmsService::class,
+        });
         // Photos : LocalGymPhotoService par défaut — Cloudinary en prod via CLOUDINARY_URL
         $this->app->bind(GymPhotoServiceInterface::class, LocalGymPhotoService::class);
         $this->app->bind(GymSearchServiceInterface::class, GymSearchService::class);
         $this->app->bind(ProfilePhotoServiceInterface::class, ProfilePhotoService::class);
+        $this->app->bind(QrRegenerationServiceInterface::class, QrRegenerationService::class);
     }
 
     public function boot(): void

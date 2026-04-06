@@ -21,6 +21,7 @@ use App\Http\Controllers\Web\Member\MapController;
 use App\Http\Controllers\Web\Member\PaymentWebController;
 use App\Http\Controllers\Web\Member\ProfilePhotoController;
 use App\Http\Controllers\Web\Member\QrCodeController;
+use App\Http\Controllers\Web\Member\QrRegenerationController;
 use App\Http\Controllers\Web\Member\SubscriptionWebController;
 use App\Http\Controllers\Web\LandingController;
 use App\Http\Controllers\Web\SeoController;
@@ -55,6 +56,7 @@ Route::middleware(['auth', 'role:member'])
     ->group(function () {
         Route::get('/',              DashboardController::class)->name('dashboard');
         Route::get('/my-qrcode',     QrCodeController::class)->name('qrcode');
+        Route::post('/my-qrcode/regenerate', [QrRegenerationController::class, 'store'])->name('qrcode.regenerate');
         Route::get('/subscriptions', [SubscriptionWebController::class, 'index'])->name('subscriptions');
         Route::post('/subscriptions',[SubscriptionWebController::class, 'store'])->name('subscriptions.store');
         Route::get('/payments',      PaymentWebController::class)->name('payments');

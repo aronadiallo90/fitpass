@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'role',
         'qr_token',
+        'qr_token_regenerated_at',
         'is_active',
         'profile_photo_path',
         'two_factor_secret',
@@ -47,6 +48,7 @@ class User extends Authenticatable
             'is_active'                  => 'boolean',
             'two_factor_recovery_codes'  => 'array',
             'two_factor_confirmed_at'    => 'datetime',
+            'qr_token_regenerated_at'    => 'datetime',
         ];
     }
 

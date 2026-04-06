@@ -50,6 +50,73 @@
         </div>
         @endif
 
+        {{-- Régénération QR code --}}
+        @php
+            $regeneratedAt = auth()->user()->qr_token_regenerated_at;
+            $canRegenerate = $regeneratedAt === null || $regeneratedAt->addHours(24)->isPast();
+            $nextRegenerationAt = $canRegenerate ? null : $regeneratedAt->addHours(24);
+        @endphp
+
+        <div style="margin-top: 2rem;" x-data="{ confirming: false }">
+
+            @if(session('success'))
+                <div class="alert-success" style="margin-bottom: 1rem;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert-danger" style="margin-bottom: 1rem;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if($canRegenerate)
+                {{-- Bouton de régénération avec confirmation Alpine.js --}}
+                <div x-show="!confirming">
+                    <button
+                        type="button"
+                        @click="confirming = true"
+                        class="btn-ghost"
+                        style="font-size: 0.8rem; color: var(--color-text-muted);"
+                    >
+                        Régénérer mon QR code
+                    </button>
+                </div>
+
+                <div x-show="confirming" x-cloak style="border: 1px solid var(--color-warning); border-radius: 0.5rem; padding: 1rem; background: rgba(245,158,11,0.08);">
+                    <p style="font-size: 0.85rem; color: var(--color-warning); margin-bottom: 1rem;">
+                        Votre QR code actuel sera immédiatement invalide.<br>
+                        Cette action est irréversible. Continuer ?
+                    </p>
+                    <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                        <form method="POST" action="{{ route('member.qrcode.regenerate') }}">
+                            @csrf
+                            <button type="submit" class="btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1.25rem;">
+                                Oui, régénérer
+                            </button>
+                        </form>
+                        <button
+                            type="button"
+                            @click="confirming = false"
+                            class="btn-ghost"
+                            style="font-size: 0.8rem; padding: 0.5rem 1.25rem;"
+                        >
+                            Annuler
+                        </button>
+                    </div>
+                </div>
+            @else
+                {{-- Cooldown actif — afficher heure de disponibilité --}}
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); text-align: center;">
+                    Prochain QR disponible le
+                    <strong style="color: var(--color-warning);">
+                        {{ $nextRegenerationAt->format('d/m/Y à H:i') }}
+                    </strong>
+                </p>
+            @endif
+        </div>
+
     @else
 
         {{-- Pas d'abonnement --}}
