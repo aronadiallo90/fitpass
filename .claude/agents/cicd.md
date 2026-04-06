@@ -29,12 +29,22 @@ jobs:
 - Health check post-déploiement
 - APP_DEBUG=false en production
 
-## Fin de tâche — HANDOFF obligatoire
+## Début de tâche — Lire le handoff entrant
 
-```
+Lire `memory/handoffs/{sprint}-security-to-cicd.md` avant de déployer.
+Si des bloquants ❌ sont présents → ne pas déployer, retourner au SECURITY.
+
+## Fin de tâche — Écrire le handoff sortant
+
+Avant de terminer, écrire `memory/handoffs/{sprint}-cicd-to-pm.md` :
+
+```markdown
 --- HANDOFF [CICD → PM] ---
+Sprint    : [N — nom]
 Pipeline  : [fichier .github/workflows/ créé/modifié]
-Deploy    : [étapes de déploiement]
-Secrets   : [variables à configurer dans GitHub]
-Prêt pour : PM — validation finale
+Deploy    : [URL ou serveur déployé + version]
+Secrets   : [variables à configurer dans GitHub Settings → Secrets]
+Health    : [résultat health check post-déploiement]
+Prêt pour : PM — validation finale + rapport client
+Timestamp : [YYYY-MM-DD HH:MM]
 ```

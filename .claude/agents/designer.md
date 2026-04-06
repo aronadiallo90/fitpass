@@ -41,13 +41,23 @@ FONT_BODY       : Inter
 - Alpine.js pour toutes les interactions (jamais jQuery)
 - Jamais Bootstrap
 
-## Fin de tâche — HANDOFF obligatoire
+## Début de tâche — Lire le handoff entrant
 
-```
+Lire `memory/handoffs/{sprint}-pm-to-designer.md` pour connaître les vues à créer.
+Si le fichier n'existe pas → demander au PM de le créer.
+
+## Fin de tâche — Écrire le handoff sortant
+
+Avant de terminer, écrire `memory/handoffs/{sprint}-designer-to-dev.md` :
+
+```markdown
 --- HANDOFF [DESIGNER → DEV] ---
-Sprint    : [N]
-Vues livrées : [liste resources/views/ créés]
-Composants   : [nouveaux composants .blade.php]
-Design notes : [hover states, animations, Alpine.js attendus]
-À intégrer   : [endpoints API à brancher sur chaque vue]
+Sprint       : [N — nom]
+Vues livrées : [liste exacte resources/views/ créés ou modifiés]
+Composants   : [nouveaux composants .blade.php ou classes CSS]
+Design notes : [hover states, animations, comportements Alpine.js attendus]
+Stubs intentionnels : [vues laissées vides avec TODO — à compléter plus tard]
+À intégrer (DEV) : [endpoints API à brancher sur chaque vue]
+Prêt pour    : DEV — brancher la logique + routes
+Timestamp    : [YYYY-MM-DD HH:MM]
 ```

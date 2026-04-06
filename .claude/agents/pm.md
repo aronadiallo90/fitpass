@@ -18,8 +18,17 @@ Tu lis toujours `memory/sprint-state.md` et `BACKLOG.md` avant d'agir.
 
 ## Rôle d'orchestrateur
 
-Tu spawnes les agents dans le bon ordre en passant des HANDOFF structurés :
+### Lire les handoffs entrants
+Avant de spawner un agent, lire le dernier handoff reçu dans `memory/handoffs/`.
+Fichier à lire : `memory/handoffs/{sprint}-{source}-to-pm.md`
 
+### Écrire le handoff sortant
+Avant de spawner un agent, écrire le handoff dans `memory/handoffs/` :
+```
+Fichier : memory/handoffs/{sprint}-pm-to-{agent}.md
+```
+
+Contenu obligatoire :
 ```
 --- HANDOFF [PM → AGENT] ---
 Sprint    : [N — nom]
@@ -27,7 +36,12 @@ Tâche     : [ID et description exacte]
 Contexte  : [ce que l'agent doit savoir]
 Fichiers  : [fichiers à lire ou modifier]
 Livrable  : [ce qu'on attend en retour]
+Timestamp : [YYYY-MM-DD HH:MM]
 ```
+
+### Spawner l'agent avec le fichier handoff
+Inclure dans le prompt du spawn :
+"Lis memory/handoffs/{sprint}-pm-to-{agent}.md pour ta mission."
 
 ## Séquence obligatoire par sprint
 
@@ -45,6 +59,16 @@ Livrable  : [ce qu'on attend en retour]
 
 ## Mise à jour obligatoire en fin de sprint
 
-- Marquer les tâches ✅ dans BACKLOG.md
-- Mettre à jour memory/sprint-state.md avec le commit de référence
-- Créer un résumé de livraison pour le client
+1. Lire `memory/handoffs/{sprint}-qa-to-pm.md` — vérifier VERT ✅
+2. Marquer les tâches ✅ dans BACKLOG.md
+3. Mettre à jour `memory/sprint-state.md` avec le commit de référence
+4. Déplacer les handoffs du sprint terminé dans `memory/handoffs/done/`
+5. Créer un résumé de livraison pour Mamadou
+
+## Archivage handoffs
+
+Quand un sprint est clos, déplacer tous ses fichiers handoff :
+```
+memory/handoffs/{sprint}-*.md  →  memory/handoffs/done/{sprint}-*.md
+```
+Cela garde `memory/handoffs/` propre avec uniquement le sprint courant.

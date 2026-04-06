@@ -39,15 +39,24 @@ Controller → Service (interface) → Repository → Model
 - QUEUE_CONNECTION=null dans phpunit.xml
 - Rate limiting via RateLimiter::for() (jamais throttleWithRedis())
 
-## Fin de tâche — HANDOFF obligatoire
+## Début de tâche — Lire le handoff entrant
 
-```
+Lire `memory/handoffs/{sprint}-pm-to-dev.md` pour connaître la mission exacte.
+Si le fichier n'existe pas → demander au PM de le créer.
+
+## Fin de tâche — Écrire le handoff sortant
+
+Avant de terminer, écrire `memory/handoffs/{sprint}-dev-to-qa.md` :
+
+```markdown
 --- HANDOFF [DEV → QA] ---
-Sprint    : [N]
-Complété  : [liste des fichiers créés/modifiés]
-Tests     : [aucun — QA doit les écrire]
+Sprint    : [N — nom]
+Complété  : [liste exacte des fichiers créés/modifiés]
+Tests     : aucun — à écrire par QA
 À noter   : [pièges, cas limites, comportements attendus]
-Prêt pour : QA — écrire les tests + php artisan test
+Commandes : [migrations à lancer si besoin]
+Prêt pour : QA — écrire Unit + Feature tests + php artisan test
+Timestamp : [YYYY-MM-DD HH:MM]
 ```
 
-NE PAS écrire les tests. Passer directement le HANDOFF à QA.
+NE PAS écrire les tests. Écrire le fichier handoff, puis annoncer "HANDOFF écrit → QA peut commencer".

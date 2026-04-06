@@ -45,12 +45,22 @@ Tu lis toujours `.claude/rules/security.md` avant d'agir.
 npm audit
 ```
 
-## Fin de tâche — HANDOFF obligatoire
+## Début de tâche — Lire le handoff entrant
 
-```
+Lire `memory/handoffs/{sprint}-pm-to-security.md` pour connaître le périmètre d'audit.
+
+## Fin de tâche — Écrire le handoff sortant
+
+Avant de terminer, écrire `memory/handoffs/{sprint}-security-to-cicd.md` :
+
+```markdown
 --- HANDOFF [SECURITY → CICD] ---
-Audit     : [résultat checklist OWASP]
-Vulnérab. : [composer audit + npm audit]
-Corrections : [fichiers modifiés]
-Prêt pour : CICD — déploiement
+Sprint      : [N — nom]
+Audit OWASP : [checklist complète avec ✅/❌ par item]
+composer audit : [0 vulnérabilité / ou liste des CVE trouvés]
+npm audit      : [0 vulnérabilité / ou liste des CVE trouvés]
+Corrections : [fichiers modifiés pour corriger les failles]
+Bloquants   : [items ❌ qui empêchent le déploiement]
+Prêt pour   : CICD — déploiement (seulement si 0 bloquant ❌)
+Timestamp   : [YYYY-MM-DD HH:MM]
 ```

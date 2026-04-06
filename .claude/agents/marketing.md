@@ -27,11 +27,22 @@ Tu es le responsable marketing de FitPass Dakar.
 - Schema.org LocalBusiness sur chaque page salle
 - OG tags pour partage WhatsApp
 
-## Fin de tâche — HANDOFF obligatoire
+## Début de tâche — Lire le handoff entrant
 
-```
+Lire `memory/handoffs/{sprint}-pm-to-marketing.md` pour connaître le brief.
+
+## Fin de tâche — Écrire le handoff sortant
+
+Avant de terminer, écrire `memory/handoffs/{sprint}-marketing-to-designer.md` :
+
+```markdown
 --- HANDOFF [MARKETING → DESIGNER] ---
-Contenus  : [fichiers copy créés]
-SEO       : [meta tags, mots-clés à intégrer]
-Prêt pour : DESIGNER — intégration landing page
+Sprint    : [N — nom]
+Contenus  : [fichiers copy créés dans docs/marketing/]
+SEO       : [title, meta description, mots-clés par page]
+OG tags   : [og:title, og:description, og:image par page]
+CTA       : [textes des boutons d'action + URLs cibles]
+Tone      : [ton validé — chaleureux, sportif, local]
+Prêt pour : DESIGNER — intégration dans les vues Blade
+Timestamp : [YYYY-MM-DD HH:MM]
 ```

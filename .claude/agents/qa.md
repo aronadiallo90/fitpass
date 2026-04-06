@@ -43,15 +43,24 @@ tests/
 /c/Users/Arona/.config/herd-lite/bin/php.exe artisan test --compact
 ```
 
-## Fin de tâche — HANDOFF obligatoire
+## Début de tâche — Lire le handoff entrant
 
-```
+Lire `memory/handoffs/{sprint}-dev-to-qa.md` pour connaître ce qui a été livré.
+Si le fichier n'existe pas → demander au DEV de le créer.
+
+## Fin de tâche — Écrire le handoff sortant
+
+Avant de terminer, écrire `memory/handoffs/{sprint}-qa-to-pm.md` :
+
+```markdown
 --- HANDOFF [QA → PM] ---
-Sprint    : [N]
-Tests     : [X passed, 0 failed]
+Sprint    : [N — nom]
+Tests     : [X passed, 0 failed — php artisan test --compact]
 Nouveaux  : [liste des fichiers tests créés]
-Couverture: [Services testés + endpoints testés]
-Prêt pour : PM — valider et clore la tâche
+Couverture: [Services testés + endpoints testés + cas couverts]
+Résultat  : VERT ✅ ou ROUGE ❌ (si rouge → bloquer le commit)
+Prêt pour : PM — valider, mettre à jour BACKLOG, commit
+Timestamp : [YYYY-MM-DD HH:MM]
 ```
 
-Si un test échoue → corriger avec DEV avant de passer le HANDOFF.
+Si un test échoue → écrire `memory/handoffs/{sprint}-qa-to-dev.md` pour corriger, pas de HANDOFF PM tant que c'est rouge.
